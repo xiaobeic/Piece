@@ -33,7 +33,7 @@ public class JumboJackpotController{
 
         JumboJackpotPieceVo jumboJackpotPieceVo1 = jumboJackpotFactory.requestPiece(1L, 123456L);
         JumboJackpotPieceVo jumboJackpotPieceVo2 = jumboJackpotFactory.requestPiece(1L, 8888888L);
-        return jumboJackpotPieceVo1.getJumboJackpotPiece().getPieceName()+"-"+jumboJackpotPieceVo2.getJumboJackpotPiece().getPieceName();
+        return jumboJackpotPieceVo1.getJumboJackpotPieceState().getPieceName()+"-"+jumboJackpotPieceVo2.getJumboJackpotPieceState().getPieceName();
     }
 
     @RequestMapping(value = "/demo2", method = RequestMethod.GET)
@@ -42,6 +42,6 @@ public class JumboJackpotController{
 
         JumboJackpotPieceVo jumboJackpotPieceVo1 = jumboJackpotFactory.requestPiece(2L, 123456L);
         JumboJackpotPieceVo jumboJackpotPieceVo2 = jumboJackpotFactory.requestPiece(2L, 8888888L);
-        return jumboJackpotPieceVo1.getJumboJackpotPiece().getPieceName()+"-"+jumboJackpotPieceVo2.getJumboJackpotPiece().getPieceName();
+        return jumboJackpotPieceVo1.getJumboJackpotPieceState().getPieceName()+"-"+jumboJackpotPieceVo2.getJumboJackpotPieceState().getPieceName();
     }
 }

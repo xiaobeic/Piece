@@ -1,11 +1,11 @@
 package com.jjg.repository;
 
 
-import com.jjg.model.JumboJackpotPieceImage;
+import com.jjg.model.JumboJackpotPiece;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JumboJackpotPiezeImageDao extends CrudRepository<JumboJackpotPieceImage, Long> {
+public interface JumboJackpotPiezeImageDao extends CrudRepository<JumboJackpotPiece, Long> {
 
 }

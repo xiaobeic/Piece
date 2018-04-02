@@ -1,17 +1,17 @@
 package com.jjg.model.vo;
 
-import com.jjg.model.JumboJackpotPiece;
+import com.jjg.model.JumboJackpotPieceState;
 
 public class JumboJackpotPieceVo {
     private boolean collectAll;
 
-    private JumboJackpotPiece jumboJackpotPiece;
+    private JumboJackpotPieceState jumboJackpotPieceState;
 
     public boolean isCollectAll() { return collectAll; }
 
     public void setCollectAll(boolean collectAll) { this.collectAll = collectAll; }
 
-    public JumboJackpotPiece getJumboJackpotPiece() { return jumboJackpotPiece; }
+    public JumboJackpotPieceState getJumboJackpotPieceState() { return jumboJackpotPieceState; }
 
-    public void setJumboJackpotPiece(JumboJackpotPiece jumboJackpotPiece) { this.jumboJackpotPiece = jumboJackpotPiece; }
+    public void setJumboJackpotPieceState(JumboJackpotPieceState jumboJackpotPieceState) { this.jumboJackpotPieceState = jumboJackpotPieceState; }
 }

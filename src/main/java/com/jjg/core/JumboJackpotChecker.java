@@ -1,7 +1,7 @@
 package com.jjg.core;
 
 import com.jjg.model.JumboJackpot;
-import com.jjg.model.JumboJackpotPiece;
+import com.jjg.model.JumboJackpotPieceState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +27,11 @@ public class JumboJackpotChecker {
     }
 
     // Get a piece at random.
-    public boolean jumboJackpotHandler(JumboJackpotPiece jumboJackpotPiece, Long playerId){
-        savePlayerPiece(jumboJackpotPiece, playerId);
+    public boolean jumboJackpotHandler(JumboJackpotPieceState jumboJackpotPieceState, Long playerId){
+        savePlayerPiece(jumboJackpotPieceState, playerId);
 
         // If is rare piece add current user to rareUsers
-        if(isRacePiece(jumboJackpotPiece) && !rarePlayer.contains(playerId)){
+        if(isRacePiece(jumboJackpotPieceState) && !rarePlayer.contains(playerId)){
             rarePlayer.add(playerId);
         }
 
@@ -46,21 +46,21 @@ public class JumboJackpotChecker {
     }
 
     // Save player piece in pool
-    private void savePlayerPiece(JumboJackpotPiece jumboJackpotPiece, Long playerId) {
+    private void savePlayerPiece(JumboJackpotPieceState jumboJackpotPieceState, Long playerId) {
         List<String> playerPieces;
         if (playersPieces.containsKey(playerId)) {
             playerPieces = playersPieces.get(playerId);
         } else {
             playerPieces = new ArrayList<>();
         }
-        playerPieces.add(jumboJackpotPiece.getPieceName());
+        playerPieces.add(jumboJackpotPieceState.getPieceName());
         playersPieces.put(playerId, playerPieces);
     }
 
     // Determine whether is a rare piece.
-    private boolean isRacePiece(JumboJackpotPiece jumboJackpotPiece){
+    private boolean isRacePiece(JumboJackpotPieceState jumboJackpotPieceState){
         List<String> racePieces = Arrays.asList(jumboJackpot.getRacePieces().split(","));
-        if (racePieces.contains(jumboJackpotPiece.getPieceName())) {
+        if (racePieces.contains(jumboJackpotPieceState.getPieceName())) {
             return true;
         }
         return false;

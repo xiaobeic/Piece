@@ -1,47 +1,32 @@
 package com.jjg.model;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity(name = "jumboJackpotPiece")
 public class JumboJackpotPiece {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long pieceId;
-    private String pieceName;
-    private Integer pieceNumber;
+    private Long pieceIamgeId;
+    private String imageName;
+    private String imagePath;
     private Long jumboJackpotId;
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDate;
 
-    public Long getPieceId() { return pieceId; }
+    public Long getPieceIamgeId() { return pieceIamgeId; }
 
-    public void setPieceId(Long pieceId) { this.pieceId = pieceId; }
+    public void setPieceIamgeId(Long pieceIamgeId) { this.pieceIamgeId = pieceIamgeId; }
 
-    public String getPieceName() { return pieceName; }
+    public String getImageName() { return imageName; }
 
-    public void setPieceName(String pieceName) { this.pieceName = pieceName; }
+    public void setImageName(String imageName) { this.imageName = imageName; }
 
-    public Integer getPieceNumber() { return pieceNumber; }
+    public String getImagePath() { return imagePath; }
 
-    public void setPieceNumber(Integer pieceNumber) { this.pieceNumber = pieceNumber; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     public Long getJumboJackpotId() { return jumboJackpotId; }
 
     public void setJumboJackpotId(Long jumboJackpotId) { this.jumboJackpotId = jumboJackpotId; }
-
-    public Date getCreatedDate() { return createdDate; }
-
-    public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
-
-    public Date getUpdatedDate() { return updatedDate; }
-
-    public void setUpdatedDate(Date updatedDate) { this.updatedDate = updatedDate; }
 }
