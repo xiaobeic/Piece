@@ -41,7 +41,13 @@ public class JumboJackpotController{
         JumboJackpotFactory jumboJackpotFactory = JumboJackpotFactory.getInstance();
 
         JumboJackpotPieceVo jumboJackpotPieceVo1 = jumboJackpotFactory.requestPiece(2L, 123456L);
-        JumboJackpotPieceVo jumboJackpotPieceVo2 = jumboJackpotFactory.requestPiece(2L, 8888888L);
-        return jumboJackpotPieceVo1.getJumboJackpotPieceState().getPieceName()+"-"+jumboJackpotPieceVo2.getJumboJackpotPieceState().getPieceName();
+        return jumboJackpotPieceVo1.getJumboJackpotPieceState().getPieceName();
+    }
+
+
+    @RequestMapping(value = "/demo3", method = RequestMethod.GET)
+    public Integer demo3() {
+        int num = 985 / 1000;
+        return num;
     }
 }

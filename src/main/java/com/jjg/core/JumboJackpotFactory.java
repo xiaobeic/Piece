@@ -3,6 +3,7 @@ package com.jjg.core;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -20,19 +21,24 @@ public class JumboJackpotFactory {
         return LazyHolder.INSTANCE;
     }
 
-    public void init(List<JumboJackpot> jumboJackpots){
+    public List<Long> init(List<JumboJackpot> jumboJackpots){
+        List<Long> initStatus = new ArrayList<>();
         jumboJackpotList.clear();
 
         for(JumboJackpot jumboJackpot :jumboJackpots){
-            generateJumboJackpot(jumboJackpot);
+            if(!generateJumboJackpot(jumboJackpot)) {
+                initStatus.add(jumboJackpot.getJumboJackpotId());
+            }
         }
+
+        return initStatus;
     }
 
     /**
      * Generate JJG
      * @param jumboJackpot
      */
-    public void generateJumboJackpot(JumboJackpot jumboJackpot){
+    public boolean generateJumboJackpot(JumboJackpot jumboJackpot){
         Date now = new Date();
         if (!jumboJackpotList.containsKey(jumboJackpot.getJumboJackpotId())
                 && now.before(jumboJackpot.getToDate())
@@ -42,12 +48,54 @@ public class JumboJackpotFactory {
             jumboJackpot.setStatus(1);
 
             jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
+
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * Return jumbo jackpot list
+     * @return jumboJackpotList
+     */
+    public Hashtable<Long, JumboJackpotPool> getJumboJackpotList () {
+        return jumboJackpotList;
     }
 
 
+    /**
+     * Remove a jumbo jackpot
+     * @param jumboJackpotId
+     * @return
+     */
+    public boolean removeJumboJackpot (Long jumboJackpotId) {
+        if (jumboJackpotList.containsKey(jumboJackpotId)){
+            jumboJackpotList.remove(jumboJackpotId);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove all jumbo jackpot
+     * @return
+     */
+    public void clearJumboJackpotList () {
+        jumboJackpotList.clear();
+    }
+
+    /**
+     * return a piece
+     * @param jumboJackpotId
+     * @param playerId
+     * @return jumboJackpotPieceVo
+     */
     public JumboJackpotPieceVo requestPiece(Long jumboJackpotId,  Long playerId){
         JumboJackpotPool jumboJackpotPool = jumboJackpotList.get(jumboJackpotId);
+        if (jumboJackpotPool == null) {
+            return null;
+        }
+
         JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPool.getPiece(playerId);
 
         return jumboJackpotPieceVo;

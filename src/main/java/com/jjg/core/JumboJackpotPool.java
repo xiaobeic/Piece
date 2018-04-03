@@ -19,8 +19,12 @@ public class JumboJackpotPool {
     // The piece information in the pool
     private HashMap<String, JumboJackpotPieceState> jumboJackpotPieces = new HashMap<>();
 
+    private List<Integer> piecesIntervalMark = new ArrayList<>();
+    private List<Integer> piecesMap = new ArrayList<>();
+    private int remainPieces = 0;
+
     // init
-    public void init(JumboJackpot jumboJackpot){
+    protected void init(JumboJackpot jumboJackpot){
         this.jumboJackpot = jumboJackpot;
         jumboJackpotChecker = new JumboJackpotChecker(jumboJackpot);
         jumboJackpot.setStatus(0);
@@ -30,7 +34,7 @@ public class JumboJackpotPool {
     /**
      * Randomly generate JJG fragments.
      */
-    public void generateJumboJackpotPieces(){
+    private void generateJumboJackpotPieces(){
         int pieceType = jumboJackpot.getPieceType();
         int raceRatio = jumboJackpot.getRaceRatio();
         int totalPieces = jumboJackpot.getTotalPieces();
@@ -38,15 +42,31 @@ public class JumboJackpotPool {
 
         int totalRacePieces = totalPieces * raceRatio / 1000;
         int perRacePiecesNum = totalRacePieces / racePieces.size();
+        //Ensure each race piece at least one
+        if (perRacePiecesNum == 0) {
+            perRacePiecesNum = 1;
+        }
+
         int perOrdinariesPiecesNum = (totalPieces - totalRacePieces) / (pieceType - racePieces.size());
+
+        int deviationPiece = totalPieces - (perRacePiecesNum * racePieces.size())
+                - (perOrdinariesPiecesNum * (pieceType - racePieces.size()));
+        int deviationRatio = deviationPiece > (pieceType - racePieces.size()) ? 2 : 1;
 
         for (int i = 1; i <= pieceType; i++) {
             if (racePieces.contains(String.valueOf(i))) {
                 createJumboJackpotPiece(String.valueOf(i), perRacePiecesNum);
             } else {
-                createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum);
+                if (deviationPiece > 0) {
+                    createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum + deviationRatio);
+                    deviationPiece -= deviationRatio;
+                } else {
+                    createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum);
+                }
             }
         }
+
+        generateIntervalMark();
     }
 
     private void createJumboJackpotPiece (String piecesName, int pieceNumber) {
@@ -59,39 +79,62 @@ public class JumboJackpotPool {
     }
 
     /**
+     * Generate the piece interval.
+     */
+    private void  generateIntervalMark () {
+        remainPieces = 0;
+        piecesIntervalMark.clear();
+        piecesMap.clear();
+        Iterator iterator = jumboJackpotPieces.keySet().iterator();
+        while (iterator.hasNext()) {
+            JumboJackpotPieceState jumboJackpotPieceState = jumboJackpotPieces.get(iterator.next());
+            if (jumboJackpotPieceState.getPieceNumber() > 0) {
+                remainPieces += jumboJackpotPieceState.getPieceNumber();
+                piecesIntervalMark.add(remainPieces);
+                piecesMap.add(Integer.valueOf(jumboJackpotPieceState.getPieceName()));
+            }
+        }
+    }
+
+    /**
      * According to the information in the piece pool get a piece at random.
      * @param playerId
      * @return jumboJackpotPiece
      */
-    public JumboJackpotPieceVo getPiece(Long playerId){
-        String targetPiece = "0";
+    protected JumboJackpotPieceVo getPiece(Long playerId){
+        String targetPiece = "";
+        if (remainPieces == 0) {
+            return null;
+        }
 
         lock.lock();
         try {
             System.out.println(Thread.currentThread() + "gets the piece lock");
-            List<String> piecesNumber = new ArrayList<>();
 
-            // Gets the remaining piece type in the pool.
-            Iterator iterator = jumboJackpotPieces.keySet().iterator();
-            while (iterator.hasNext()) {
-                JumboJackpotPieceState jumboJackpotPieceState = jumboJackpotPieces.get(iterator.next());
-                if (jumboJackpotPieceState.getPieceNumber() > 0) {
-                    piecesNumber.add(jumboJackpotPieceState.getPieceName());
+            int randomNumber = 1 + (int)(Math.random() * remainPieces);
+
+            int pieceIndex = 0;
+            for (int i = 0; i < piecesIntervalMark.size(); i++) {
+                if (randomNumber <= piecesIntervalMark.get(i)) {
+                    pieceIndex = i;
+                    break;
                 }
             }
+            targetPiece = String.valueOf(piecesMap.get(pieceIndex));
 
-            if (piecesNumber.size() == 0) {
+            if (targetPiece.equals("")) {
                 return null;
             }
 
-            int randomNumber = (int)(Math.random() * piecesNumber.size());
-
-            targetPiece = piecesNumber.get(randomNumber);
-
             // The corresponding piece minus one.
-            JumboJackpotPieceState jumboJackpotPiecePool = jumboJackpotPieces.get(targetPiece);
-            jumboJackpotPiecePool.setPieceNumber(jumboJackpotPiecePool.getPieceNumber() - 1);
-            jumboJackpotPieces.put(targetPiece, jumboJackpotPiecePool);
+            JumboJackpotPieceState jumboJackpotPieceState = jumboJackpotPieces.get(targetPiece);
+            int currentPieceNumber = jumboJackpotPieceState.getPieceNumber();
+            jumboJackpotPieceState.setPieceNumber(currentPieceNumber - 1);
+            jumboJackpotPieces.put(targetPiece, jumboJackpotPieceState);
+
+            if (currentPieceNumber == 1) {
+                generateIntervalMark();
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -101,18 +144,15 @@ public class JumboJackpotPool {
 
         // Determine jumbo jackpot status.
         JumboJackpotPieceVo jumboJackpotPieceVo = new JumboJackpotPieceVo();
+        JumboJackpotPieceState jumboJackpotPieceState = new JumboJackpotPieceState();
+        jumboJackpotPieceState.setPieceNumber(1);
+        jumboJackpotPieceState.setJumboJackpotId(jumboJackpot.getJumboJackpotId());
+        jumboJackpotPieceState.setPieceName(targetPiece);
 
-        if (!targetPiece.equals("0")) {
-            JumboJackpotPieceState jumboJackpotPieceState = new JumboJackpotPieceState();
-            jumboJackpotPieceState.setPieceNumber(1);
-            jumboJackpotPieceState.setJumboJackpotId(jumboJackpot.getJumboJackpotId());
-            jumboJackpotPieceState.setPieceName(targetPiece);
+        boolean result = jumboJackpotChecker.jumboJackpotHandler(jumboJackpotPieceState, playerId);
 
-            boolean result = jumboJackpotChecker.jumboJackpotHandler(jumboJackpotPieceState, playerId);
-
-            jumboJackpotPieceVo.setCollectAll(result);
-            jumboJackpotPieceVo.setJumboJackpotPieceState(jumboJackpotPieceState);
-        }
+        jumboJackpotPieceVo.setCollectAll(result);
+        jumboJackpotPieceVo.setJumboJackpotPieceState(jumboJackpotPieceState);
 
         return jumboJackpotPieceVo;
     }

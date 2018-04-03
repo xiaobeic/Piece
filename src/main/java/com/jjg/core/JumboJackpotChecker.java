@@ -27,7 +27,7 @@ public class JumboJackpotChecker {
     }
 
     // Get a piece at random.
-    public boolean jumboJackpotHandler(JumboJackpotPieceState jumboJackpotPieceState, Long playerId){
+    protected boolean jumboJackpotHandler(JumboJackpotPieceState jumboJackpotPieceState, Long playerId){
         savePlayerPiece(jumboJackpotPieceState, playerId);
 
         // If is rare piece add current user to rareUsers
