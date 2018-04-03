@@ -1,5 +1,6 @@
 package com.jjg.core;
 
+import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 
@@ -26,9 +27,10 @@ public class JumboJackpotFactory {
         jumboJackpotList.clear();
 
         for(JumboJackpot jumboJackpot :jumboJackpots){
-            if(!generateJumboJackpot(jumboJackpot)) {
-                initStatus.add(jumboJackpot.getJumboJackpotId());
-            }
+
+            //........
+
+            initStatus.add(jumboJackpot.getJumboJackpotId());
         }
 
         return initStatus;
@@ -38,20 +40,26 @@ public class JumboJackpotFactory {
      * Generate JJG
      * @param jumboJackpot
      */
-    public boolean generateJumboJackpot(JumboJackpot jumboJackpot){
+    public JumboJackpotPool generateJumboJackpot(JumboJackpot jumboJackpot){
         Date now = new Date();
+        JumboJackpotPool jumboJackpotPool = new JumboJackpotPool();
         if (!jumboJackpotList.containsKey(jumboJackpot.getJumboJackpotId())
                 && now.before(jumboJackpot.getToDate())
                 && now.after(jumboJackpot.getFormDate())) {
-            JumboJackpotPool jumboJackpotPool = new JumboJackpotPool();
             jumboJackpotPool.init(jumboJackpot);
-            jumboJackpot.setStatus(1);
+            jumboJackpot.setStatus(JumboJackpotConstants.ACTIVE);
 
             jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
-
-            return true;
         }
-        return false;
+        return jumboJackpotPool;
+    }
+
+    /**
+     * Return a jumbo jackpot pool
+     * @return jumboJackpotPool
+     */
+    public JumboJackpotPool getJumboJackpot (Long jumboJackpotId) {
+        return jumboJackpotList.get(jumboJackpotId);
     }
 
     /**
@@ -74,14 +82,6 @@ public class JumboJackpotFactory {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Remove all jumbo jackpot
-     * @return
-     */
-    public void clearJumboJackpotList () {
-        jumboJackpotList.clear();
     }
 
     /**

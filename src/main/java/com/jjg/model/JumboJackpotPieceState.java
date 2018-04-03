@@ -14,6 +14,7 @@ public class JumboJackpotPieceState {
     private String pieceName;
     private Integer pieceNumber;
     private Long jumboJackpotId;
+    private boolean isActive;
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -36,6 +37,10 @@ public class JumboJackpotPieceState {
     public Long getJumboJackpotId() { return jumboJackpotId; }
 
     public void setJumboJackpotId(Long jumboJackpotId) { this.jumboJackpotId = jumboJackpotId; }
+
+    public boolean isActive() { return isActive; }
+
+    public void setActive(boolean active) { isActive = active; }
 
     public Date getCreatedDate() { return createdDate; }
 

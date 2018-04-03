@@ -8,4 +8,9 @@ public interface JumboJackpotService {
 
     List<JumboJackpot> getJumboJackpotAll();
 
+    JumboJackpot getJumboJackpotById(Long jumboJackpotId);
+
+    boolean updateJumboJackpotState(Long jumboJackpotId, Integer status);
+
+    boolean exists(Long jumboJackpotId);
 }

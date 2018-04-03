@@ -23,11 +23,14 @@ public class JumboJackpotPool {
     private List<Integer> piecesMap = new ArrayList<>();
     private int remainPieces = 0;
 
+    public HashMap<String, JumboJackpotPieceState> getJumboJackpotPieces() {
+        return jumboJackpotPieces;
+    }
+
     // init
     protected void init(JumboJackpot jumboJackpot){
         this.jumboJackpot = jumboJackpot;
         jumboJackpotChecker = new JumboJackpotChecker(jumboJackpot);
-        jumboJackpot.setStatus(0);
         generateJumboJackpotPieces();
     }
 
@@ -75,6 +78,7 @@ public class JumboJackpotPool {
         jumboJackpotPieceState.setPieceName(piecesName);
         jumboJackpotPieceState.setPieceNumber(pieceNumber);
         jumboJackpotPieceState.setCreatedDate(new Date());
+        jumboJackpotPieceState.setActive(true);
         jumboJackpotPieces.put(piecesName, jumboJackpotPieceState);
     }
 
@@ -103,7 +107,7 @@ public class JumboJackpotPool {
      */
     protected JumboJackpotPieceVo getPiece(Long playerId){
         String targetPiece = "";
-        if (remainPieces == 0) {
+        if (remainPieces == 0 || jumboJackpot.getStatus() != 1) {
             return null;
         }
 

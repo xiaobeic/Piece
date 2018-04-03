@@ -1,5 +1,6 @@
 package com.jjg.core;
 
+import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.JumboJackpotPieceState;
 
@@ -72,7 +73,7 @@ public class JumboJackpotChecker {
             System.out.println(thread.getName()+"gets the check lock");
 
             if(jumboJackpot.getStatus() == 1 && isCollected(playerId)){
-                jumboJackpot.setStatus(2);
+                jumboJackpot.setStatus(JumboJackpotConstants.INACTIVE);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
