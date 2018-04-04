@@ -6,4 +6,6 @@ import java.util.HashMap;
 
 public interface JumboJackpotPieceStateService {
     void saveJumboJackpotPieceState(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces);
+
+    boolean updatePieceState(JumboJackpotPieceState jumboJackpotPieceState);
 }

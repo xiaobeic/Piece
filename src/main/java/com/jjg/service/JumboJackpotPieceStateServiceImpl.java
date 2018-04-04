@@ -5,8 +5,7 @@ import com.jjg.repository.JumboJackpotPieceStateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 @Service
 public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceStateService {
@@ -18,9 +17,26 @@ public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceState
     @Override
     public void saveJumboJackpotPieceState(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces) {
         Iterator iterator = jumboJackpotPieces.keySet().iterator();
+        List<JumboJackpotPieceState> jumboJackpotPieceList = new ArrayList<>();
         while (iterator.hasNext()) {
-            JumboJackpotPieceState jumboJackpotPieceState = jumboJackpotPieces.get(iterator.next());
-            jumboJackpotPieceStateDao.save(jumboJackpotPieceState);
+            jumboJackpotPieceList.add(jumboJackpotPieces.get(iterator.next()));
         }
+        jumboJackpotPieceStateDao.save(jumboJackpotPieceList);
+    }
+
+    @Override
+    public boolean updatePieceState(JumboJackpotPieceState jumboJackpotPieceState) {
+        JumboJackpotPieceState jumboJackpotPieceStateNew = jumboJackpotPieceStateDao.findByJumboJackpotIdAndPieceName(
+                jumboJackpotPieceState.getJumboJackpotId(), jumboJackpotPieceState.getPieceName());
+
+        if (jumboJackpotPieceStateNew == null || jumboJackpotPieceStateNew.getPieceNumber() <= 0) {
+            return false;
+        }
+
+        jumboJackpotPieceStateNew.setPieceNumber(jumboJackpotPieceStateNew.getPieceNumber() - 1);
+        jumboJackpotPieceStateNew.setUpdatedDate(new Date());
+        jumboJackpotPieceStateDao.save(jumboJackpotPieceStateNew);
+
+        return true;
     }
 }

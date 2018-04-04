@@ -23,12 +23,26 @@ public class JumboJackpotPool {
     private List<Integer> piecesMap = new ArrayList<>();
     private int remainPieces = 0;
 
+    public void setJumboJackpot(JumboJackpot jumboJackpot) {
+        this.jumboJackpot = jumboJackpot;
+    }
+
     public HashMap<String, JumboJackpotPieceState> getJumboJackpotPieces() {
         return jumboJackpotPieces;
     }
 
-    // init
-    protected void init(JumboJackpot jumboJackpot){
+    public void setJumboJackpotPieces(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces) {
+        this.jumboJackpotPieces = jumboJackpotPieces;
+    }
+
+    public void setJumboJackpotChecker(JumboJackpotChecker jumboJackpotChecker) {
+        this.jumboJackpotChecker = jumboJackpotChecker;
+    }
+
+    public JumboJackpotPool() {}
+
+    // create jumbo jackpot pool
+    public JumboJackpotPool(JumboJackpot jumboJackpot){
         this.jumboJackpot = jumboJackpot;
         jumboJackpotChecker = new JumboJackpotChecker(jumboJackpot);
         generateJumboJackpotPieces();
@@ -78,14 +92,13 @@ public class JumboJackpotPool {
         jumboJackpotPieceState.setPieceName(piecesName);
         jumboJackpotPieceState.setPieceNumber(pieceNumber);
         jumboJackpotPieceState.setCreatedDate(new Date());
-        jumboJackpotPieceState.setActive(true);
         jumboJackpotPieces.put(piecesName, jumboJackpotPieceState);
     }
 
     /**
      * Generate the piece interval.
      */
-    private void  generateIntervalMark () {
+    public void  generateIntervalMark () {
         remainPieces = 0;
         piecesIntervalMark.clear();
         piecesMap.clear();
@@ -105,7 +118,7 @@ public class JumboJackpotPool {
      * @param playerId
      * @return jumboJackpotPiece
      */
-    protected JumboJackpotPieceVo getPiece(Long playerId){
+    public JumboJackpotPieceVo getPiece(Long playerId){
         String targetPiece = "";
         if (remainPieces == 0 || jumboJackpot.getStatus() != 1) {
             return null;

@@ -11,7 +11,8 @@ public class PlayerPiece {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long playerPieceId;
     private Long playerId;
-    private Long jumboJackpotPieceId;
+    private String pieceName;
+    private Long jumboJackpotId;
     private Boolean isLatest;
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -25,9 +26,13 @@ public class PlayerPiece {
 
     public void setPlayerId(Long playerId) { this.playerId = playerId; }
 
-    public Long getJumboJackpotPieceId() { return jumboJackpotPieceId; }
+    public String getPieceName() { return pieceName; }
 
-    public void setJumboJackpotPieceId(Long jumboJackpotPieceId) { this.jumboJackpotPieceId = jumboJackpotPieceId; }
+    public void setPieceName(String pieceName) { this.pieceName = pieceName; }
+
+    public Long getJumboJackpotId() { return jumboJackpotId; }
+
+    public void setJumboJackpotId(Long jumboJackpotId) { this.jumboJackpotId = jumboJackpotId; }
 
     public Boolean getLatest() { return isLatest; }
 

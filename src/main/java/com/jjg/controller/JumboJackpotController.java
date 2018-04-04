@@ -4,16 +4,21 @@ import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.core.JumboJackpotFactory;
 import com.jjg.core.JumboJackpotPool;
 import com.jjg.model.JumboJackpot;
+import com.jjg.model.vo.JumboJackpotPieceVo;
+import com.jjg.model.vo.JumboJackpotRestoreVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
+import com.jjg.service.PlayerPieceService;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiQueryParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -27,14 +32,38 @@ public class JumboJackpotController{
     @Autowired
     private JumboJackpotPieceStateService jumboJackpotPieceStateServiceImpl;
 
-    @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public String init() {
-        List<JumboJackpot> jumboJackpots = jumboJackpotServiceImpl.getJumboJackpotAll();
+    @Autowired
+    private PlayerPieceService playerPieceServiceImpl;
 
-        JumboJackpotFactory jumboJackpotFactory = JumboJackpotFactory.getInstance();
-        jumboJackpotFactory.generateJumboJackpot(jumboJackpots.get(1));
+    private JumboJackpotFactory jumboJackpotFactory;
 
-        return "OK";
+    @ModelAttribute
+    public void jumboJackpotFactoryInit () {
+        jumboJackpotFactory = JumboJackpotFactory.getInstance();
+    }
+
+    @RequestMapping(value = "/restore", method = RequestMethod.GET)
+    public boolean restore() {
+        List<JumboJackpot> jumboJackpots = jumboJackpotServiceImpl.getJumboJackpotActiveAll();
+
+        if (jumboJackpots.size() == 0) {
+            return true;
+        }
+
+        List<JumboJackpotRestoreVo> jumboJackpotRestoreVos = new ArrayList<>();
+        for (JumboJackpot jumboJackpot : jumboJackpots) {
+            JumboJackpotRestoreVo jumboJackpotRestoreVo = new JumboJackpotRestoreVo();
+            jumboJackpotRestoreVo.setJumboJackpot(jumboJackpot);
+
+            //...........
+
+
+            jumboJackpotRestoreVos.add(jumboJackpotRestoreVo);
+        }
+
+        jumboJackpotFactory.jumboJackpotRestore(jumboJackpotRestoreVos);
+
+        return true;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -42,10 +71,14 @@ public class JumboJackpotController{
     public @ApiResponseObject boolean createJumboJackpot(
             @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) {
         JumboJackpot jumboJackpot = jumboJackpotServiceImpl.getJumboJackpotById(jumboJackpotId);
-        if (jumboJackpot == null) {
+        if (jumboJackpot == null || jumboJackpot.getStatus() != JumboJackpotConstants.INIT) {
             return false;
         }
-        JumboJackpotPool jumboJackpotPool = JumboJackpotFactory.getInstance().generateJumboJackpot(jumboJackpot);
+
+        JumboJackpotPool jumboJackpotPool = jumboJackpotFactory.generateJumboJackpot(jumboJackpot);
+        if (jumboJackpotPool.getJumboJackpotPieces().size() == 0) {
+            return false;
+        }
 
         jumboJackpotPieceStateServiceImpl.saveJumboJackpotPieceState(jumboJackpotPool.getJumboJackpotPieces());
         return jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.ACTIVE);
@@ -58,13 +91,13 @@ public class JumboJackpotController{
         if (!jumboJackpotServiceImpl.exists(jumboJackpotId)) {
             return null;
         }
-        return JumboJackpotFactory.getInstance().getJumboJackpot(jumboJackpotId);
+        return jumboJackpotFactory.getJumboJackpot(jumboJackpotId);
     }
 
     @RequestMapping(value = "/getJumboJackpotList", method = RequestMethod.GET)
     @ApiMethod(description = "Get Jumbo Jackpot list")
     public @ApiResponseObject Hashtable<Long, JumboJackpotPool> getJumboJackpotList () {
-        return JumboJackpotFactory.getInstance().getJumboJackpotList();
+        return jumboJackpotFactory.getJumboJackpotList();
     }
 
     @RequestMapping(value = "/removeJumboJackpot", method = RequestMethod.GET)
@@ -75,11 +108,35 @@ public class JumboJackpotController{
             return false;
         }
 
-        if(!JumboJackpotFactory.getInstance().removeJumboJackpot(jumboJackpotId)) {
+        if(!jumboJackpotFactory.removeJumboJackpot(jumboJackpotId)) {
             return false;
         }
 
         return jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.INACTIVE);
+    }
+
+    @RequestMapping(value = "/getPiece", method = RequestMethod.GET)
+    @ApiMethod(description = "Get a piece by jumbo jackpot id and player id")
+    public @ApiResponseObject boolean getPiece(
+            @ApiQueryParam(name = "jumboJackpotId", description = "jumbo jackpot id") long jumboJackpotId,
+            @ApiQueryParam(name = "playerId", description = "player id") long playerId) {
+        if (!jumboJackpotServiceImpl.isActive(jumboJackpotId)) {
+            return false;
+        }
+
+        JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotFactory.requestPiece(jumboJackpotId, playerId);
+
+        if (!jumboJackpotPieceStateServiceImpl.updatePieceState(jumboJackpotPieceVo.getJumboJackpotPieceState())) {
+            return false;
+        }
+
+        playerPieceServiceImpl.save(jumboJackpotPieceVo.getJumboJackpotPieceState(), playerId);
+
+        if (jumboJackpotPieceVo.isCollectAll()) {
+            jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.INACTIVE);
+        }
+
+        return true;
     }
 
 }

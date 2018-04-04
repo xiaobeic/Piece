@@ -14,21 +14,37 @@ import java.util.concurrent.locks.ReentrantLock;
 public class JumboJackpotChecker {
 
     // User list with has rare piece
-    private List<Long> rarePlayer = new ArrayList<>();
+    private List<Long> rarePlayer;
+
+    private HashMap<Long, List<String>> playersPieces;
 
     // Lock
     private Lock lock = new ReentrantLock();
 
-    private HashMap<Long, List<String>> playersPieces = new HashMap<>();
-
     private JumboJackpot jumboJackpot;
 
-    public JumboJackpotChecker (JumboJackpot jumboJackpot) {
+    public void setJumboJackpot(JumboJackpot jumboJackpot) {
         this.jumboJackpot = jumboJackpot;
     }
 
+    public void setRarePlayer(List<Long> rarePlayer) {
+        this.rarePlayer = rarePlayer;
+    }
+
+    public void setPlayersPieces(HashMap<Long, List<String>> playersPieces) {
+        this.playersPieces = playersPieces;
+    }
+
+    public JumboJackpotChecker() {}
+
+    public JumboJackpotChecker (JumboJackpot jumboJackpot) {
+        this.jumboJackpot = jumboJackpot;
+        rarePlayer = new ArrayList<>();
+        playersPieces = new HashMap<>();
+    }
+
     // Get a piece at random.
-    protected boolean jumboJackpotHandler(JumboJackpotPieceState jumboJackpotPieceState, Long playerId){
+    public boolean jumboJackpotHandler(JumboJackpotPieceState jumboJackpotPieceState, Long playerId){
         savePlayerPiece(jumboJackpotPieceState, playerId);
 
         // If is rare piece add current user to rareUsers

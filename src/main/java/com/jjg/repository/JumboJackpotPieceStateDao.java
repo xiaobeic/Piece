@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JumboJackpotPieceStateDao extends CrudRepository<JumboJackpotPieceState, Long> {
 
+    JumboJackpotPieceState findByJumboJackpotIdAndPieceName(Long jumboJackpotId, String pieceName);
 }

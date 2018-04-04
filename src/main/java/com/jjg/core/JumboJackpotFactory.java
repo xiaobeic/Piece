@@ -3,6 +3,7 @@ package com.jjg.core;
 import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.vo.JumboJackpotPieceVo;
+import com.jjg.model.vo.JumboJackpotRestoreVo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,18 +23,30 @@ public class JumboJackpotFactory {
         return LazyHolder.INSTANCE;
     }
 
-    public List<Long> init(List<JumboJackpot> jumboJackpots){
-        List<Long> initStatus = new ArrayList<>();
+    public void jumboJackpotRestore(List<JumboJackpotRestoreVo> jumboJackpotRestoreVos){
         jumboJackpotList.clear();
 
-        for(JumboJackpot jumboJackpot :jumboJackpots){
+        Date now = new Date();
+        for(JumboJackpotRestoreVo jumboJackpotRestoreVo :jumboJackpotRestoreVos){
+            JumboJackpot jumboJackpot = jumboJackpotRestoreVo.getJumboJackpot();
 
-            //........
+            if (now.before(jumboJackpot.getToDate()) && now.after(jumboJackpot.getFormDate())) {
+                JumboJackpotPool jumboJackpotPool = new JumboJackpotPool();
 
-            initStatus.add(jumboJackpot.getJumboJackpotId());
+                JumboJackpotChecker jumboJackpotChecker = new JumboJackpotChecker();
+                jumboJackpotChecker.setJumboJackpot(jumboJackpot);
+                jumboJackpotChecker.setRarePlayer(jumboJackpotRestoreVo.getRarePlayer());
+                jumboJackpotChecker.setPlayersPieces(jumboJackpotRestoreVo.getPlayersPieces());
+
+                jumboJackpotPool.setJumboJackpotChecker(jumboJackpotChecker);
+                jumboJackpotPool.setJumboJackpot(jumboJackpot);
+                jumboJackpotPool.setJumboJackpotPieces(jumboJackpotRestoreVo.getJumboJackpotPieces());
+
+                jumboJackpotPool.generateIntervalMark();
+
+                jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
+            }
         }
-
-        return initStatus;
     }
 
     /**
@@ -42,11 +55,10 @@ public class JumboJackpotFactory {
      */
     public JumboJackpotPool generateJumboJackpot(JumboJackpot jumboJackpot){
         Date now = new Date();
-        JumboJackpotPool jumboJackpotPool = new JumboJackpotPool();
+        JumboJackpotPool jumboJackpotPool = new JumboJackpotPool(jumboJackpot);
         if (!jumboJackpotList.containsKey(jumboJackpot.getJumboJackpotId())
                 && now.before(jumboJackpot.getToDate())
                 && now.after(jumboJackpot.getFormDate())) {
-            jumboJackpotPool.init(jumboJackpot);
             jumboJackpot.setStatus(JumboJackpotConstants.ACTIVE);
 
             jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
@@ -97,6 +109,10 @@ public class JumboJackpotFactory {
         }
 
         JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPool.getPiece(playerId);
+
+        if (jumboJackpotPieceVo.isCollectAll()) {
+            removeJumboJackpot(jumboJackpotId);
+        }
 
         return jumboJackpotPieceVo;
     }
