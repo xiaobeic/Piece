@@ -39,4 +39,18 @@ public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceState
 
         return true;
     }
+
+    @Override
+    public HashMap<String, JumboJackpotPieceState> getJumboJackpotPieceState(Long jumboJackpotId) {
+
+        HashMap<String, JumboJackpotPieceState> jumboJackpotPieces = new HashMap<>();
+
+        List<JumboJackpotPieceState> jumboJackpotPiecesList = jumboJackpotPieceStateDao.findByJumboJackpotId(jumboJackpotId);
+
+        for (JumboJackpotPieceState jumboJackpotPieceState : jumboJackpotPiecesList) {
+            jumboJackpotPieces.put(jumboJackpotPieceState.getPieceName(), jumboJackpotPieceState);
+        }
+
+        return jumboJackpotPieces;
+    }
 }

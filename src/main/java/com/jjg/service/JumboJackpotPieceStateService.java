@@ -8,4 +8,6 @@ public interface JumboJackpotPieceStateService {
     void saveJumboJackpotPieceState(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces);
 
     boolean updatePieceState(JumboJackpotPieceState jumboJackpotPieceState);
+
+    HashMap<String,JumboJackpotPieceState> getJumboJackpotPieceState(Long jumboJackpotId);
 }

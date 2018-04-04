@@ -4,11 +4,13 @@ import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.core.JumboJackpotFactory;
 import com.jjg.core.JumboJackpotPool;
 import com.jjg.model.JumboJackpot;
+import com.jjg.model.JumboJackpotPieceState;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 import com.jjg.model.vo.JumboJackpotRestoreVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
 import com.jjg.service.PlayerPieceService;
+import com.jjg.service.PlayerPieceServiceImpl;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiQueryParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -55,7 +58,14 @@ public class JumboJackpotController{
             JumboJackpotRestoreVo jumboJackpotRestoreVo = new JumboJackpotRestoreVo();
             jumboJackpotRestoreVo.setJumboJackpot(jumboJackpot);
 
-            //...........
+            HashMap<String, JumboJackpotPieceState> jumboJackpotPieces =
+                    jumboJackpotPieceStateServiceImpl.getJumboJackpotPieceState(jumboJackpot.getJumboJackpotId());
+            jumboJackpotRestoreVo.setJumboJackpotPieces(jumboJackpotPieces);
+
+            jumboJackpotRestoreVo.setRarePlayer(playerPieceServiceImpl.getRarePlayer(jumboJackpot));
+
+            jumboJackpotRestoreVo.setPlayersPieces(
+                    playerPieceServiceImpl.getPlayerPieces(jumboJackpot.getJumboJackpotId()));
 
 
             jumboJackpotRestoreVos.add(jumboJackpotRestoreVo);
