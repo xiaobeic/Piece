@@ -15,17 +15,17 @@ public class JumboJackpotServiceImpl implements JumboJackpotService {
     private JumboJackpotDao jumboJackpotDao;
 
     @Override
-    public List<JumboJackpot> getJumboJackpotActiveAll() {
+    public List<JumboJackpot> getJumboJackpotActiveAll()  throws Exception {
         return jumboJackpotDao.findByStatus(JumboJackpotConstants.ACTIVE);
     }
 
     @Override
-    public JumboJackpot getJumboJackpotById(Long jumboJackpotId) {
+    public JumboJackpot getJumboJackpotById(Long jumboJackpotId) throws Exception {
         return jumboJackpotDao.findOne(jumboJackpotId);
     }
 
     @Override
-    public boolean updateJumboJackpotState(Long jumboJackpotId, Integer status) {
+    public boolean updateJumboJackpotState(Long jumboJackpotId, Integer status) throws Exception {
         JumboJackpot jumboJackpot = jumboJackpotDao.findOne(jumboJackpotId);
         jumboJackpot.setStatus(status);
         jumboJackpot.setUpdatedDate(new Date());
@@ -34,12 +34,12 @@ public class JumboJackpotServiceImpl implements JumboJackpotService {
     }
 
     @Override
-    public boolean exists(Long jumboJackpotId) {
+    public boolean exists(Long jumboJackpotId) throws Exception {
         return jumboJackpotDao.exists(jumboJackpotId);
     }
 
     @Override
-    public boolean isActive(Long jumboJackpotId) {
+    public boolean isActive(Long jumboJackpotId) throws Exception {
         JumboJackpot jumboJackpot = jumboJackpotDao.findOne(jumboJackpotId);
         if (jumboJackpot != null && jumboJackpot.getStatus() == JumboJackpotConstants.ACTIVE) {
             return true;

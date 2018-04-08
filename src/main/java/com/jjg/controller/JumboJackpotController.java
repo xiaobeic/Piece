@@ -45,7 +45,7 @@ public class JumboJackpotController{
     }
 
     @RequestMapping(value = "/restore", method = RequestMethod.GET)
-    public boolean restore() {
+    public boolean restore() throws Exception {
         List<JumboJackpot> jumboJackpots = jumboJackpotServiceImpl.getJumboJackpotActiveAll();
 
         if (jumboJackpots.size() == 0) {
@@ -78,7 +78,7 @@ public class JumboJackpotController{
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     @ApiMethod(description = "Create a Jumbo Jackpot")
     public @ApiResponseObject boolean createJumboJackpot(
-            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) {
+            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) throws Exception {
         JumboJackpot jumboJackpot = jumboJackpotServiceImpl.getJumboJackpotById(jumboJackpotId);
         if (jumboJackpot == null || jumboJackpot.getStatus() != JumboJackpotConstants.INIT) {
             return false;
@@ -97,7 +97,7 @@ public class JumboJackpotController{
     @ApiMethod(description = "get a Jumbo Jackpot")
     public @ApiResponseObject
     JumboJackpotPiecesPool getJumboJackpot (
-            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) {
+            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) throws Exception {
         if (!jumboJackpotServiceImpl.exists(jumboJackpotId)) {
             return null;
         }
@@ -113,7 +113,7 @@ public class JumboJackpotController{
     @RequestMapping(value = "/removeJumboJackpot", method = RequestMethod.GET)
     @ApiMethod(description = "Remove a Jumbo Jackpot")
     public @ApiResponseObject boolean removeJumboJackpot (
-            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) {
+            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) throws Exception {
         if (!jumboJackpotServiceImpl.exists(jumboJackpotId)) {
             return false;
         }
@@ -129,7 +129,7 @@ public class JumboJackpotController{
     @ApiMethod(description = "Get a piece by jumbo jackpot id and player id")
     public @ApiResponseObject boolean getPiece(
             @ApiQueryParam(name = "jumboJackpotId", description = "jumbo jackpot id") long jumboJackpotId,
-            @ApiQueryParam(name = "playerId", description = "player id") long playerId) {
+            @ApiQueryParam(name = "playerId", description = "player id") long playerId) throws Exception {
         if (!jumboJackpotServiceImpl.isActive(jumboJackpotId)) {
             return false;
         }

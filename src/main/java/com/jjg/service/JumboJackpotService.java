@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface JumboJackpotService {
 
-    List<JumboJackpot> getJumboJackpotActiveAll();
+    List<JumboJackpot> getJumboJackpotActiveAll() throws Exception;
 
-    JumboJackpot getJumboJackpotById(Long jumboJackpotId);
+    JumboJackpot getJumboJackpotById(Long jumboJackpotId) throws Exception;
 
-    boolean updateJumboJackpotState(Long jumboJackpotId, Integer status);
+    boolean updateJumboJackpotState(Long jumboJackpotId, Integer status) throws Exception;
 
-    boolean exists(Long jumboJackpotId);
+    boolean exists(Long jumboJackpotId) throws Exception;
 
-    boolean isActive(Long jumboJackpotId);
+    boolean isActive(Long jumboJackpotId) throws Exception;
 }

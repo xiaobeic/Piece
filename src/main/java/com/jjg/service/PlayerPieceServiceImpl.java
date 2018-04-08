@@ -16,7 +16,7 @@ public class PlayerPieceServiceImpl implements PlayerPieceService {
     private PlayerPieceRepository playerPieceRepository;
 
     @Override
-    public boolean save(JumboJackpotPieceState jumboJackpotPieceState, long playerId) {
+    public boolean save(JumboJackpotPieceState jumboJackpotPieceState, long playerId) throws Exception {
         PlayerPiece playerPiece = new PlayerPiece();
         playerPiece.setJumboJackpotId(jumboJackpotPieceState.getJumboJackpotId());
         playerPiece.setPieceName(jumboJackpotPieceState.getPieceName());
@@ -28,7 +28,7 @@ public class PlayerPieceServiceImpl implements PlayerPieceService {
     }
 
     @Override
-    public List<Long> getRarePlayer(JumboJackpot jumboJackpot) {
+    public List<Long> getRarePlayer(JumboJackpot jumboJackpot) throws Exception {
         List<String> racePieces = Arrays.asList(jumboJackpot.getRacePieces().split(","));
         List<Long> rarePlayers = new ArrayList<>();
         List<PlayerPiece> playerPieces = playerPieceRepository.findByjumboJackpotId(jumboJackpot.getJumboJackpotId());
@@ -43,7 +43,7 @@ public class PlayerPieceServiceImpl implements PlayerPieceService {
     }
 
     @Override
-    public HashMap<Long, List<String>> getPlayerPieces(Long jumboJackpotId) {
+    public HashMap<Long, List<String>> getPlayerPieces(Long jumboJackpotId) throws Exception {
         HashMap<Long, List<String>> playersPieces = new HashMap<>();
         List<PlayerPiece> playerPieces = playerPieceRepository.findByjumboJackpotId(jumboJackpotId);
 

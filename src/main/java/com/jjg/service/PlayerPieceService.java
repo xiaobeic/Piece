@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface PlayerPieceService {
 
-    boolean save(JumboJackpotPieceState jumboJackpotPieceState, long playerId);
+    boolean save(JumboJackpotPieceState jumboJackpotPieceState, long playerId) throws Exception;
 
-    List<Long> getRarePlayer(JumboJackpot jumboJackpot);
+    List<Long> getRarePlayer(JumboJackpot jumboJackpot) throws Exception;
 
-    HashMap<Long,List<String>> getPlayerPieces(Long jumboJackpotId);
+    HashMap<Long,List<String>> getPlayerPieces(Long jumboJackpotId) throws Exception;
 }

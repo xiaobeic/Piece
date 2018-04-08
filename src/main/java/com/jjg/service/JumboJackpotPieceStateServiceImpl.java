@@ -15,7 +15,7 @@ public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceState
 
 
     @Override
-    public void saveJumboJackpotPieceState(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces) {
+    public void saveJumboJackpotPieceState(HashMap<String, JumboJackpotPieceState> jumboJackpotPieces) throws Exception {
         Iterator iterator = jumboJackpotPieces.keySet().iterator();
         List<JumboJackpotPieceState> jumboJackpotPieceList = new ArrayList<>();
         while (iterator.hasNext()) {
@@ -25,7 +25,7 @@ public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceState
     }
 
     @Override
-    public boolean updatePieceState(JumboJackpotPieceState jumboJackpotPieceState) {
+    public boolean updatePieceState(JumboJackpotPieceState jumboJackpotPieceState) throws Exception {
         JumboJackpotPieceState jumboJackpotPieceStateNew = jumboJackpotPieceStateDao.findByJumboJackpotIdAndPieceName(
                 jumboJackpotPieceState.getJumboJackpotId(), jumboJackpotPieceState.getPieceName());
 
@@ -41,7 +41,7 @@ public class JumboJackpotPieceStateServiceImpl implements JumboJackpotPieceState
     }
 
     @Override
-    public HashMap<String, JumboJackpotPieceState> getJumboJackpotPieceState(Long jumboJackpotId) {
+    public HashMap<String, JumboJackpotPieceState> getJumboJackpotPieceState(Long jumboJackpotId) throws Exception {
 
         HashMap<String, JumboJackpotPieceState> jumboJackpotPieces = new HashMap<>();
 
