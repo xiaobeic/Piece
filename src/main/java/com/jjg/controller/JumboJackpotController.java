@@ -1,8 +1,8 @@
 package com.jjg.controller;
 
 import com.jjg.constants.JumboJackpotConstants;
-import com.jjg.core.JumboJackpotFactory;
-import com.jjg.core.JumboJackpotPool;
+import com.jjg.core.JumboJackpotPiecesFactory;
+import com.jjg.core.JumboJackpotPiecesPool;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.JumboJackpotPieceState;
 import com.jjg.model.vo.JumboJackpotPieceVo;
@@ -10,7 +10,6 @@ import com.jjg.model.vo.JumboJackpotRestoreVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
 import com.jjg.service.PlayerPieceService;
-import com.jjg.service.PlayerPieceServiceImpl;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiQueryParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
@@ -38,11 +37,11 @@ public class JumboJackpotController{
     @Autowired
     private PlayerPieceService playerPieceServiceImpl;
 
-    private JumboJackpotFactory jumboJackpotFactory;
+    private JumboJackpotPiecesFactory jumboJackpotPiecesFactory;
 
     @ModelAttribute
     public void jumboJackpotFactoryInit () {
-        jumboJackpotFactory = JumboJackpotFactory.getInstance();
+        jumboJackpotPiecesFactory = JumboJackpotPiecesFactory.getInstance();
     }
 
     @RequestMapping(value = "/restore", method = RequestMethod.GET)
@@ -71,7 +70,7 @@ public class JumboJackpotController{
             jumboJackpotRestoreVos.add(jumboJackpotRestoreVo);
         }
 
-        jumboJackpotFactory.jumboJackpotRestore(jumboJackpotRestoreVos);
+        jumboJackpotPiecesFactory.jumboJackpotRestore(jumboJackpotRestoreVos);
 
         return true;
     }
@@ -85,29 +84,30 @@ public class JumboJackpotController{
             return false;
         }
 
-        JumboJackpotPool jumboJackpotPool = jumboJackpotFactory.generateJumboJackpot(jumboJackpot);
-        if (jumboJackpotPool.getJumboJackpotPieces().size() == 0) {
+        JumboJackpotPiecesPool jumboJackpotPiecesPool = jumboJackpotPiecesFactory.generateJumboJackpot(jumboJackpot);
+        if (jumboJackpotPiecesPool.getJumboJackpotPieces().size() == 0) {
             return false;
         }
 
-        jumboJackpotPieceStateServiceImpl.saveJumboJackpotPieceState(jumboJackpotPool.getJumboJackpotPieces());
+        jumboJackpotPieceStateServiceImpl.saveJumboJackpotPieceState(jumboJackpotPiecesPool.getJumboJackpotPieces());
         return jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.ACTIVE);
     }
 
     @RequestMapping(value = "/getJumboJackpot", method = RequestMethod.GET)
     @ApiMethod(description = "get a Jumbo Jackpot")
-    public @ApiResponseObject JumboJackpotPool getJumboJackpot (
+    public @ApiResponseObject
+    JumboJackpotPiecesPool getJumboJackpot (
             @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) {
         if (!jumboJackpotServiceImpl.exists(jumboJackpotId)) {
             return null;
         }
-        return jumboJackpotFactory.getJumboJackpot(jumboJackpotId);
+        return jumboJackpotPiecesFactory.getJumboJackpot(jumboJackpotId);
     }
 
     @RequestMapping(value = "/getJumboJackpotList", method = RequestMethod.GET)
     @ApiMethod(description = "Get Jumbo Jackpot list")
-    public @ApiResponseObject Hashtable<Long, JumboJackpotPool> getJumboJackpotList () {
-        return jumboJackpotFactory.getJumboJackpotList();
+    public @ApiResponseObject Hashtable<Long, JumboJackpotPiecesPool> getJumboJackpotList () {
+        return jumboJackpotPiecesFactory.getJumboJackpotList();
     }
 
     @RequestMapping(value = "/removeJumboJackpot", method = RequestMethod.GET)
@@ -118,7 +118,7 @@ public class JumboJackpotController{
             return false;
         }
 
-        if(!jumboJackpotFactory.removeJumboJackpot(jumboJackpotId)) {
+        if(!jumboJackpotPiecesFactory.removeJumboJackpot(jumboJackpotId)) {
             return false;
         }
 
@@ -134,7 +134,7 @@ public class JumboJackpotController{
             return false;
         }
 
-        JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotFactory.requestPiece(jumboJackpotId, playerId);
+        JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPiecesFactory.requestPiece(jumboJackpotId, playerId);
 
         if (!jumboJackpotPieceStateServiceImpl.updatePieceState(jumboJackpotPieceVo.getJumboJackpotPieceState())) {
             return false;
@@ -142,7 +142,7 @@ public class JumboJackpotController{
 
         playerPieceServiceImpl.save(jumboJackpotPieceVo.getJumboJackpotPieceState(), playerId);
 
-        if (jumboJackpotPieceVo.isCollectAll()) {
+        if (jumboJackpotPieceVo.isCollectAll() || jumboJackpotPieceVo.isGiveOutAll()) {
             jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.INACTIVE);
         }
 

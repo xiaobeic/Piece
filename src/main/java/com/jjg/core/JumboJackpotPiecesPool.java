@@ -9,10 +9,10 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class JumboJackpotPool {
+public class JumboJackpotPiecesPool {
     private JumboJackpot jumboJackpot;
 
-    private JumboJackpotChecker jumboJackpotChecker = null;
+    private JumboJackpotPiecesChecker jumboJackpotPiecesChecker = null;
 
     private Lock lock = new ReentrantLock();
 
@@ -35,16 +35,16 @@ public class JumboJackpotPool {
         this.jumboJackpotPieces = jumboJackpotPieces;
     }
 
-    public void setJumboJackpotChecker(JumboJackpotChecker jumboJackpotChecker) {
-        this.jumboJackpotChecker = jumboJackpotChecker;
+    public void setJumboJackpotPiecesChecker(JumboJackpotPiecesChecker jumboJackpotPiecesChecker) {
+        this.jumboJackpotPiecesChecker = jumboJackpotPiecesChecker;
     }
 
-    public JumboJackpotPool() {}
+    public JumboJackpotPiecesPool() {}
 
     // create jumbo jackpot pool
-    public JumboJackpotPool(JumboJackpot jumboJackpot){
+    public JumboJackpotPiecesPool(JumboJackpot jumboJackpot){
         this.jumboJackpot = jumboJackpot;
-        jumboJackpotChecker = new JumboJackpotChecker(jumboJackpot);
+        jumboJackpotPiecesChecker = new JumboJackpotPiecesChecker(jumboJackpot);
         generateJumboJackpotPieces();
     }
 
@@ -120,6 +120,7 @@ public class JumboJackpotPool {
      */
     public JumboJackpotPieceVo getPiece(Long playerId){
         String targetPiece = "";
+        JumboJackpotPieceVo jumboJackpotPieceVo = new JumboJackpotPieceVo();
         if (remainPieces == 0 || jumboJackpot.getStatus() != 1) {
             return null;
         }
@@ -152,6 +153,10 @@ public class JumboJackpotPool {
             if (currentPieceNumber == 1) {
                 generateIntervalMark();
             }
+
+            if (remainPieces == 0) {
+                jumboJackpotPieceVo.setGiveOutAll(true);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -160,13 +165,12 @@ public class JumboJackpotPool {
         }
 
         // Determine jumbo jackpot status.
-        JumboJackpotPieceVo jumboJackpotPieceVo = new JumboJackpotPieceVo();
         JumboJackpotPieceState jumboJackpotPieceState = new JumboJackpotPieceState();
         jumboJackpotPieceState.setPieceNumber(1);
         jumboJackpotPieceState.setJumboJackpotId(jumboJackpot.getJumboJackpotId());
         jumboJackpotPieceState.setPieceName(targetPiece);
 
-        boolean result = jumboJackpotChecker.jumboJackpotHandler(jumboJackpotPieceState, playerId);
+        boolean result = jumboJackpotPiecesChecker.jumboJackpotHandler(jumboJackpotPieceState, playerId);
 
         jumboJackpotPieceVo.setCollectAll(result);
         jumboJackpotPieceVo.setJumboJackpotPieceState(jumboJackpotPieceState);

@@ -5,21 +5,20 @@ import com.jjg.model.JumboJackpot;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 import com.jjg.model.vo.JumboJackpotRestoreVo;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
-public class JumboJackpotFactory {
+public class JumboJackpotPiecesFactory {
 
     // JJG id map JJG
-    Hashtable<Long, JumboJackpotPool> jumboJackpotList = new Hashtable<>();
+    Hashtable<Long, JumboJackpotPiecesPool> jumboJackpotList = new Hashtable<>();
 
     private static class LazyHolder {
-        private static  final JumboJackpotFactory INSTANCE = new JumboJackpotFactory();
+        private static  final JumboJackpotPiecesFactory INSTANCE = new JumboJackpotPiecesFactory();
     }
 
-    public static final JumboJackpotFactory getInstance() {
+    public static final JumboJackpotPiecesFactory getInstance() {
         return LazyHolder.INSTANCE;
     }
 
@@ -31,20 +30,20 @@ public class JumboJackpotFactory {
             JumboJackpot jumboJackpot = jumboJackpotRestoreVo.getJumboJackpot();
 
             if (now.before(jumboJackpot.getToDate()) && now.after(jumboJackpot.getFormDate())) {
-                JumboJackpotPool jumboJackpotPool = new JumboJackpotPool();
+                JumboJackpotPiecesPool jumboJackpotPiecesPool = new JumboJackpotPiecesPool();
 
-                JumboJackpotChecker jumboJackpotChecker = new JumboJackpotChecker();
-                jumboJackpotChecker.setJumboJackpot(jumboJackpot);
-                jumboJackpotChecker.setRarePlayer(jumboJackpotRestoreVo.getRarePlayer());
-                jumboJackpotChecker.setPlayersPieces(jumboJackpotRestoreVo.getPlayersPieces());
+                JumboJackpotPiecesChecker jumboJackpotPiecesChecker = new JumboJackpotPiecesChecker();
+                jumboJackpotPiecesChecker.setJumboJackpot(jumboJackpot);
+                jumboJackpotPiecesChecker.setRarePlayer(jumboJackpotRestoreVo.getRarePlayer());
+                jumboJackpotPiecesChecker.setPlayersPieces(jumboJackpotRestoreVo.getPlayersPieces());
 
-                jumboJackpotPool.setJumboJackpotChecker(jumboJackpotChecker);
-                jumboJackpotPool.setJumboJackpot(jumboJackpot);
-                jumboJackpotPool.setJumboJackpotPieces(jumboJackpotRestoreVo.getJumboJackpotPieces());
+                jumboJackpotPiecesPool.setJumboJackpotPiecesChecker(jumboJackpotPiecesChecker);
+                jumboJackpotPiecesPool.setJumboJackpot(jumboJackpot);
+                jumboJackpotPiecesPool.setJumboJackpotPieces(jumboJackpotRestoreVo.getJumboJackpotPieces());
 
-                jumboJackpotPool.generateIntervalMark();
+                jumboJackpotPiecesPool.generateIntervalMark();
 
-                jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
+                jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPiecesPool);
             }
         }
     }
@@ -53,24 +52,25 @@ public class JumboJackpotFactory {
      * Generate JJG
      * @param jumboJackpot
      */
-    public JumboJackpotPool generateJumboJackpot(JumboJackpot jumboJackpot){
+    public JumboJackpotPiecesPool generateJumboJackpot(JumboJackpot jumboJackpot){
         Date now = new Date();
-        JumboJackpotPool jumboJackpotPool = new JumboJackpotPool(jumboJackpot);
+        JumboJackpotPiecesPool jumboJackpotPiecesPool = null;
         if (!jumboJackpotList.containsKey(jumboJackpot.getJumboJackpotId())
                 && now.before(jumboJackpot.getToDate())
                 && now.after(jumboJackpot.getFormDate())) {
+            jumboJackpotPiecesPool = new JumboJackpotPiecesPool(jumboJackpot);
             jumboJackpot.setStatus(JumboJackpotConstants.ACTIVE);
 
-            jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPool);
+            jumboJackpotList.put(jumboJackpot.getJumboJackpotId(), jumboJackpotPiecesPool);
         }
-        return jumboJackpotPool;
+        return jumboJackpotPiecesPool;
     }
 
     /**
      * Return a jumbo jackpot pool
      * @return jumboJackpotPool
      */
-    public JumboJackpotPool getJumboJackpot (Long jumboJackpotId) {
+    public JumboJackpotPiecesPool getJumboJackpot (Long jumboJackpotId) {
         return jumboJackpotList.get(jumboJackpotId);
     }
 
@@ -78,7 +78,7 @@ public class JumboJackpotFactory {
      * Return jumbo jackpot list
      * @return jumboJackpotList
      */
-    public Hashtable<Long, JumboJackpotPool> getJumboJackpotList () {
+    public Hashtable<Long, JumboJackpotPiecesPool> getJumboJackpotList () {
         return jumboJackpotList;
     }
 
@@ -103,14 +103,14 @@ public class JumboJackpotFactory {
      * @return jumboJackpotPieceVo
      */
     public JumboJackpotPieceVo requestPiece(Long jumboJackpotId,  Long playerId){
-        JumboJackpotPool jumboJackpotPool = jumboJackpotList.get(jumboJackpotId);
-        if (jumboJackpotPool == null) {
+        JumboJackpotPiecesPool jumboJackpotPiecesPool = jumboJackpotList.get(jumboJackpotId);
+        if (jumboJackpotPiecesPool == null) {
             return null;
         }
 
-        JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPool.getPiece(playerId);
+        JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPiecesPool.getPiece(playerId);
 
-        if (jumboJackpotPieceVo.isCollectAll()) {
+        if (jumboJackpotPieceVo.isCollectAll() || jumboJackpotPieceVo.isGiveOutAll()) {
             removeJumboJackpot(jumboJackpotId);
         }
 

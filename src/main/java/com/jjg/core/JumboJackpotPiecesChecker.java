@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class JumboJackpotChecker {
+public class JumboJackpotPiecesChecker {
 
     // User list with has rare piece
     private List<Long> rarePlayer;
@@ -35,9 +35,9 @@ public class JumboJackpotChecker {
         this.playersPieces = playersPieces;
     }
 
-    public JumboJackpotChecker() {}
+    public JumboJackpotPiecesChecker() {}
 
-    public JumboJackpotChecker (JumboJackpot jumboJackpot) {
+    public JumboJackpotPiecesChecker(JumboJackpot jumboJackpot) {
         this.jumboJackpot = jumboJackpot;
         rarePlayer = new ArrayList<>();
         playersPieces = new HashMap<>();
