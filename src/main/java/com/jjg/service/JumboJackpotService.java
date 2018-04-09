@@ -1,6 +1,7 @@
 package com.jjg.service;
 
 import com.jjg.model.JumboJackpot;
+import com.jjg.model.bo.JumboJackpotBo;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface JumboJackpotService {
     boolean exists(Long jumboJackpotId) throws Exception;
 
     boolean isActive(Long jumboJackpotId) throws Exception;
+
+    boolean saveJumboJackpot(JumboJackpotBo jumboJackpotBo) throws Exception;
 }

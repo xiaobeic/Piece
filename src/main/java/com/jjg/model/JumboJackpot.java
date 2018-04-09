@@ -5,6 +5,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "jumboJackpot")
 public class JumboJackpot {
@@ -12,22 +13,23 @@ public class JumboJackpot {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long jumboJackpotId;
     private String name;
+    private String title;
     private Date formDate;
     private Date toDate;
-    private String rulesFilePath;
+    private String rulesFile;
     private String emailsToNotify;
-    private String boardImagePath;
+    private String boardImage;
     private String gameThumbnail;
-    private String gameIconPath;
+    private String gameIcon;
     private String distributions;
     private String mobileLocation;
     private String kioskLocation;
     private Integer totalPieces;
     private String racePieces;
     private String oddsOfWinning;
-    private int pieceType;
-    private int raceRatio;
-    private String value;
+    private Integer pieceType;
+    private Integer raceRatio;
+    private Integer value;
     private String attractVideos;
     private Boolean isDefault;
     private Long createUser;
@@ -47,6 +49,10 @@ public class JumboJackpot {
 
     public void setName(String name) { this.name = name; }
 
+    public String getTitle() { return title; }
+
+    public void setTitle(String title) { this.title = title; }
+
     public Date getFormDate() { return formDate; }
 
     public void setFormDate(Date formDate) { this.formDate = formDate; }
@@ -55,25 +61,25 @@ public class JumboJackpot {
 
     public void setToDate(Date toDate) { this.toDate = toDate; }
 
-    public String getRulesFilePath() { return rulesFilePath; }
+    public String getRulesFile() { return rulesFile; }
 
-    public void setRulesFilePath(String rulesFilePath) { this.rulesFilePath = rulesFilePath; }
+    public void setRulesFile(String rulesFile) { this.rulesFile = rulesFile; }
 
     public String getEmailsToNotify() { return emailsToNotify; }
 
     public void setEmailsToNotify(String emailsToNotify) { this.emailsToNotify = emailsToNotify; }
 
-    public String getBoardImagePath() { return boardImagePath; }
+    public String getBoardImage() { return boardImage; }
 
-    public void setBoardImagePath(String boardImagePath) { this.boardImagePath = boardImagePath; }
+    public void setBoardImage(String boardImage) { this.boardImage = boardImage; }
 
     public String getGameThumbnail() { return gameThumbnail; }
 
     public void setGameThumbnail(String gameThumbnail) { this.gameThumbnail = gameThumbnail; }
 
-    public String getGameIconPath() { return gameIconPath; }
+    public String getGameIcon() { return gameIcon; }
 
-    public void setGameIconPath(String gameIconPath) { this.gameIconPath = gameIconPath; }
+    public void setGameIcon(String gameIcon) { this.gameIcon = gameIcon; }
 
     public String getDistributions() { return distributions; }
 
@@ -99,17 +105,17 @@ public class JumboJackpot {
 
     public void setOddsOfWinning(String oddsOfWinning) { this.oddsOfWinning = oddsOfWinning; }
 
-    public int getPieceType() { return pieceType; }
+    public Integer getPieceType() { return pieceType; }
 
-    public void setPieceType(int pieceType) { this.pieceType = pieceType; }
+    public void setPieceType(Integer pieceType) { this.pieceType = pieceType; }
 
-    public int getRaceRatio() { return raceRatio; }
+    public Integer getRaceRatio() { return raceRatio; }
 
-    public void setRaceRatio(int raceRatio) { this.raceRatio = raceRatio; }
+    public void setRaceRatio(Integer raceRatio) { this.raceRatio = raceRatio; }
 
-    public String getValue() { return value; }
+    public Integer getValue() { return value; }
 
-    public void setValue(String value) { this.value = value; }
+    public void setValue(Integer value) { this.value = value; }
 
     public String getAttractVideos() { return attractVideos; }
 

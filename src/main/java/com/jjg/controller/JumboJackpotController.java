@@ -5,12 +5,14 @@ import com.jjg.core.JumboJackpotPiecesFactory;
 import com.jjg.core.JumboJackpotPiecesPool;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.JumboJackpotPieceState;
+import com.jjg.model.bo.JumboJackpotBo;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 import com.jjg.model.vo.JumboJackpotRestoreVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
 import com.jjg.service.PlayerPieceService;
 import org.jsondoc.core.annotation.ApiMethod;
+import org.jsondoc.core.annotation.ApiParams;
 import org.jsondoc.core.annotation.ApiQueryParam;
 import org.jsondoc.core.annotation.ApiResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/admin/jumboJackpot")
@@ -147,6 +146,32 @@ public class JumboJackpotController{
         }
 
         return true;
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ApiMethod(description = "Save jumbo jackpot")
+    @ApiParams(queryparams = {
+            @ApiQueryParam(name = "name", description = "jumbo jackpot name", required = true, clazz = String.class),
+            @ApiQueryParam(name = "title", description = "jumbo jackpot title", required = true, clazz = String.class),
+            @ApiQueryParam(name = "formDate", description = "jumbo jackpot start date", required = true, format = "yyyy/MM/dd", clazz = Date.class),
+            @ApiQueryParam(name = "toDate", description = "jumbo jackpot end date",  required = true, format = "yyyy/MM/dd", clazz = Date.class),
+            @ApiQueryParam(name = "rulesFile", description = "jumbo jackpot rules file", required = true, clazz = String.class),
+            @ApiQueryParam(name = "emailsToNotify", description = "emails to notify", required = true, clazz = String.class),
+            @ApiQueryParam(name = "boardImage", description = "board image", required = true, clazz = String.class),
+            @ApiQueryParam(name = "gameThumbnail", description = "game thumbnail", required = true, clazz = String.class),
+            @ApiQueryParam(name = "gameIcon", description = "game icon", required = true, clazz = String.class),
+            @ApiQueryParam(name = "promotions", description = "promotions id", required = true, clazz = String.class),
+            @ApiQueryParam(name = "distributions", description = "jumbo jackpot distributions", required = true, clazz = String.class),
+            @ApiQueryParam(name = "totalPieces", description = "total pieces", required = true, clazz = Integer.class),
+            @ApiQueryParam(name = "racePieces", description = "race pieces", required = true, clazz = String.class),
+            @ApiQueryParam(name = "pieceType", description = "pieces type", required = true, clazz = Integer.class),
+            @ApiQueryParam(name = "raceRatio", description = "race piece ratio", required = true, clazz = Integer.class),
+            @ApiQueryParam(name = "value", description = "value", required = true, clazz = Integer.class),
+            @ApiQueryParam(name = "attractVideos", description = "attract videos", required = true, clazz = String.class),
+            @ApiQueryParam(name = "idDefault", description = "is default", required = true, clazz = Boolean.class)
+    })
+    public @ApiResponseObject boolean save(JumboJackpotBo jumboJackpotBo) throws Exception {
+        return jumboJackpotServiceImpl.saveJumboJackpot(jumboJackpotBo);
     }
 
 }
