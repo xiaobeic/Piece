@@ -1,13 +1,11 @@
 package com.jjg;
 
+import org.jsondoc.spring.boot.starter.EnableJSONDoc;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
+@EnableJSONDoc
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

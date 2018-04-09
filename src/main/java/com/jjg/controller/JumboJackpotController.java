@@ -11,10 +11,7 @@ import com.jjg.model.vo.JumboJackpotRestoreVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
 import com.jjg.service.PlayerPieceService;
-import org.jsondoc.core.annotation.ApiMethod;
-import org.jsondoc.core.annotation.ApiParams;
-import org.jsondoc.core.annotation.ApiQueryParam;
-import org.jsondoc.core.annotation.ApiResponseObject;
+import org.jsondoc.core.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 @RestController
+@Api(description = "The Jumbo Jackpot Controller", name = "Jumbo Jackpot API")
 @RequestMapping("/admin/jumboJackpot")
 public class JumboJackpotController{
 
@@ -43,6 +41,7 @@ public class JumboJackpotController{
         jumboJackpotPiecesFactory = JumboJackpotPiecesFactory.getInstance();
     }
 
+    @ApiMethod(description = "Restore server")
     @RequestMapping(value = "/restore", method = RequestMethod.GET)
     public boolean restore() throws Exception {
         List<JumboJackpot> jumboJackpots = jumboJackpotServiceImpl.getJumboJackpotActiveAll();
@@ -170,7 +169,7 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "attractVideos", description = "attract videos", required = true, clazz = String.class),
             @ApiQueryParam(name = "idDefault", description = "is default", required = true, clazz = Boolean.class)
     })
-    public @ApiResponseObject boolean save(JumboJackpotBo jumboJackpotBo) throws Exception {
+    public @ApiResponseObject boolean save(@ApiBodyObject JumboJackpotBo jumboJackpotBo) throws Exception {
         return jumboJackpotServiceImpl.saveJumboJackpot(jumboJackpotBo);
     }
 

@@ -5,7 +5,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity(name = "jumboJackpot")
 public class JumboJackpot {
