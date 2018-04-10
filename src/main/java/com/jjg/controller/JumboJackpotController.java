@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -154,11 +155,11 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "title", description = "jumbo jackpot title", required = true, clazz = String.class),
             @ApiQueryParam(name = "formDate", description = "jumbo jackpot start date", required = true, format = "yyyy/MM/dd", clazz = Date.class),
             @ApiQueryParam(name = "toDate", description = "jumbo jackpot end date",  required = true, format = "yyyy/MM/dd", clazz = Date.class),
-            @ApiQueryParam(name = "rulesFile", description = "jumbo jackpot rules file", required = true, clazz = String.class),
+            @ApiQueryParam(name = "rulesFile", description = "jumbo jackpot rules file", required = true, clazz = MultipartFile.class),
             @ApiQueryParam(name = "emailsToNotify", description = "emails to notify", required = true, clazz = String.class),
-            @ApiQueryParam(name = "boardImage", description = "board image", required = true, clazz = String.class),
-            @ApiQueryParam(name = "gameThumbnail", description = "game thumbnail", required = true, clazz = String.class),
-            @ApiQueryParam(name = "gameIcon", description = "game icon", required = true, clazz = String.class),
+            @ApiQueryParam(name = "boardImage", description = "board image", required = true, clazz = MultipartFile.class),
+            @ApiQueryParam(name = "gameThumbnail", description = "game thumbnail", required = true, clazz = MultipartFile.class),
+            @ApiQueryParam(name = "gameIcon", description = "game icon", required = true, clazz = MultipartFile.class),
             @ApiQueryParam(name = "promotions", description = "promotions id", required = true, clazz = String.class),
             @ApiQueryParam(name = "distributions", description = "jumbo jackpot distributions", required = true, clazz = String.class),
             @ApiQueryParam(name = "totalPieces", description = "total pieces", required = true, clazz = Integer.class),
@@ -166,8 +167,9 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "pieceType", description = "pieces type", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "raceRatio", description = "race piece ratio", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "value", description = "value", required = true, clazz = Integer.class),
-            @ApiQueryParam(name = "attractVideos", description = "attract videos", required = true, clazz = String.class),
-            @ApiQueryParam(name = "idDefault", description = "is default", required = true, clazz = Boolean.class)
+            @ApiQueryParam(name = "attractVideos", description = "attract videos", required = true, clazz = MultipartFile.class),
+            @ApiQueryParam(name = "gamePiecesImages", description = "game pieces", required = true, clazz = MultipartFile.class),
+            @ApiQueryParam(name = "isDefault", description = "is default", required = true, clazz = Boolean.class)
     })
     public @ApiResponseObject boolean save(@ApiBodyObject JumboJackpotBo jumboJackpotBo) throws Exception {
         return jumboJackpotServiceImpl.saveJumboJackpot(jumboJackpotBo);

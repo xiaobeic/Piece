@@ -2,6 +2,7 @@ package com.jjg.model.bo;
 
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -16,15 +17,15 @@ public class JumboJackpotBo {
     @ApiObjectField(description = "jumbo jackpot end date")
     private Date toDate;
     @ApiObjectField(description = "jumbo jackpot rules file")
-    private String rulesFile;
+    private MultipartFile rulesFile;
     @ApiObjectField(description = "emails to notify")
     private String emailsToNotify;
     @ApiObjectField(description = "board image")
-    private String boardImage;
+    private MultipartFile boardImage;
     @ApiObjectField(description = "game thumbnail")
-    private String gameThumbnail;
+    private MultipartFile gameThumbnail;
     @ApiObjectField(description = "game icon")
-    private String gameIcon;
+    private MultipartFile gameIcon;
     @ApiObjectField(description = "promotions id")
     private String promotions;
     @ApiObjectField(description = "jumbo jackpot distributions")
@@ -40,9 +41,9 @@ public class JumboJackpotBo {
     @ApiObjectField(description = "value")
     private Integer value;
     @ApiObjectField(description = "attract videos")
-    private String attractVideos;
+    private MultipartFile attractVideos;
     @ApiObjectField(description = "game pieces")
-    private String gamePiecesImages;
+    private MultipartFile gamePiecesImages;
     @ApiObjectField(description = "is default")
     private Boolean isDefault;
 
@@ -78,14 +79,6 @@ public class JumboJackpotBo {
         this.toDate = toDate;
     }
 
-    public String getRulesFile() {
-        return rulesFile;
-    }
-
-    public void setRulesFile(String rulesFile) {
-        this.rulesFile = rulesFile;
-    }
-
     public String getEmailsToNotify() {
         return emailsToNotify;
     }
@@ -94,36 +87,12 @@ public class JumboJackpotBo {
         this.emailsToNotify = emailsToNotify;
     }
 
-    public String getBoardImage() {
-        return boardImage;
-    }
-
-    public void setBoardImage(String boardImage) {
-        this.boardImage = boardImage;
-    }
-
-    public String getGameThumbnail() {
-        return gameThumbnail;
-    }
-
-    public void setGameThumbnail(String gameThumbnail) {
-        this.gameThumbnail = gameThumbnail;
-    }
-
-    public String getGameIcon() {
-        return gameIcon;
-    }
-
     public String getPromotions() {
         return promotions;
     }
 
     public void setPromotions(String promotions) {
         this.promotions = promotions;
-    }
-
-    public void setGameIcon(String gameIcon) {
-        this.gameIcon = gameIcon;
     }
 
     public String getDistributions() {
@@ -174,27 +143,59 @@ public class JumboJackpotBo {
         this.value = value;
     }
 
-    public String getAttractVideos() {
-        return attractVideos;
-    }
-
-    public void setAttractVideos(String attractVideos) {
-        this.attractVideos = attractVideos;
-    }
-
-    public String getGamePiecesImages() {
-        return gamePiecesImages;
-    }
-
-    public void setGamePiecesImages(String gamePiecesImages) {
-        this.gamePiecesImages = gamePiecesImages;
-    }
-
-    public Boolean getDefault() {
+    public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(Boolean aDefault) {
-        isDefault = aDefault;
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    public MultipartFile getRulesFile() {
+        return rulesFile;
+    }
+
+    public void setRulesFile(MultipartFile rulesFile) {
+        this.rulesFile = rulesFile;
+    }
+
+    public MultipartFile getBoardImage() {
+        return boardImage;
+    }
+
+    public void setBoardImage(MultipartFile boardImage) {
+        this.boardImage = boardImage;
+    }
+
+    public MultipartFile getGameThumbnail() {
+        return gameThumbnail;
+    }
+
+    public void setGameThumbnail(MultipartFile gameThumbnail) {
+        this.gameThumbnail = gameThumbnail;
+    }
+
+    public MultipartFile getGameIcon() {
+        return gameIcon;
+    }
+
+    public void setGameIcon(MultipartFile gameIcon) {
+        this.gameIcon = gameIcon;
+    }
+
+    public MultipartFile getAttractVideos() {
+        return attractVideos;
+    }
+
+    public void setAttractVideos(MultipartFile attractVideos) {
+        this.attractVideos = attractVideos;
+    }
+
+    public MultipartFile getGamePiecesImages() {
+        return gamePiecesImages;
+    }
+
+    public void setGamePiecesImages(MultipartFile gamePiecesImages) {
+        this.gamePiecesImages = gamePiecesImages;
     }
 }
