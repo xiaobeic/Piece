@@ -90,10 +90,9 @@ public class JumboJackpotPiecesFactory {
      */
     public boolean removeJumboJackpot (Long jumboJackpotId) {
         if (jumboJackpotList.containsKey(jumboJackpotId)){
-            jumboJackpotList.remove(jumboJackpotId);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**

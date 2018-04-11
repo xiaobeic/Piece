@@ -2,19 +2,24 @@ package com.jjg.model.bo;
 
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
 @ApiObject(name = "JumboJackpotBo", description = "jumboJackpot create bo", group = "admin bo")
 public class JumboJackpotBo {
+    @ApiObjectField(description = "jumbo jackpot id")
+    private Long jumboJackpotId;
     @ApiObjectField(description = "jumbo jackpot name")
     private String name;
     @ApiObjectField(description = "jumbo jackpot title")
     private String title;
     @ApiObjectField(description = "jumbo jackpot start date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date formDate;
     @ApiObjectField(description = "jumbo jackpot end date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date toDate;
     @ApiObjectField(description = "jumbo jackpot rules file")
     private MultipartFile rulesFile;
@@ -46,6 +51,14 @@ public class JumboJackpotBo {
     private MultipartFile gamePiecesImages;
     @ApiObjectField(description = "is default")
     private Boolean isDefault;
+
+    public Long getJumboJackpotId() {
+        return jumboJackpotId;
+    }
+
+    public void setJumboJackpotId(Long jumboJackpotId) {
+        this.jumboJackpotId = jumboJackpotId;
+    }
 
     public String getName() {
         return name;
