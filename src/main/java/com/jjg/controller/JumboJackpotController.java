@@ -75,31 +75,44 @@ public class JumboJackpotController{
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     @ApiMethod(description = "Create a Jumbo Jackpot")
-    public @ApiResponseObject boolean createJumboJackpot(
+    public @ApiResponseObject Integer createJumboJackpot(
             @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) throws Exception {
         JumboJackpot jumboJackpot = jumboJackpotServiceImpl.getJumboJackpotById(jumboJackpotId);
-        if (jumboJackpot == null || jumboJackpot.getStatus() != JumboJackpotConstants.INIT) {
-            return false;
+        if (jumboJackpot == null) {
+            return JumboJackpotConstants.INVALIDPARAMETER;
+        }
+
+        if (jumboJackpot.getStatus() != JumboJackpotConstants.INIT) {
+            return JumboJackpotConstants.RUNNINGOREND;
         }
 
         JumboJackpotPiecesPool jumboJackpotPiecesPool = jumboJackpotPiecesFactory.generateJumboJackpot(jumboJackpot);
         if (jumboJackpotPiecesPool.getJumboJackpotPieces().size() == 0) {
-            return false;
+            return JumboJackpotConstants.FAIL;
         }
 
         jumboJackpotPieceStateServiceImpl.saveJumboJackpotPieceState(jumboJackpotPiecesPool.getJumboJackpotPieces());
-        return jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.ACTIVE);
+        jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.ACTIVE);
+        return JumboJackpotConstants.SUCCESS;
     }
 
     @RequestMapping(value = "/getJumboJackpotPieces", method = RequestMethod.GET)
     @ApiMethod(description = "get a Jumbo Jackpot")
-    public @ApiResponseObject
-    JumboJackpotPiecesPool getJumboJackpotPieces (
+    public @ApiResponseObject List<JumboJackpotPieceState> getJumboJackpotPieces (
             @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId) throws Exception {
-        if (!jumboJackpotServiceImpl.exists(jumboJackpotId)) {
-            return null;
+        List<JumboJackpotPieceState> jumboJackpotPieces = new ArrayList<>();
+        if (!jumboJackpotPiecesFactory.isInOperation(jumboJackpotId)) {
+            return jumboJackpotPieces;
         }
-        return jumboJackpotPiecesFactory.getJumboJackpot(jumboJackpotId);
+
+        HashMap<String, JumboJackpotPieceState> jumboJackpotPieceState =
+                jumboJackpotPieceStateServiceImpl.getJumboJackpotPieceState(jumboJackpotId);
+        Iterator iterator = jumboJackpotPieceState.keySet().iterator();
+        while (iterator.hasNext()) {
+            jumboJackpotPieces.add(jumboJackpotPieceState.get(iterator.next()));
+        }
+
+        return jumboJackpotPieces;
     }
 
     @RequestMapping(value = "/getJumboJackpot", method = RequestMethod.GET)
@@ -129,8 +142,8 @@ public class JumboJackpotController{
             return JumboJackpotConstants.INVALIDPARAMETER;
         }
 
-        if(!jumboJackpotPiecesFactory.removeJumboJackpot(jumboJackpotId)) {
-            return JumboJackpotConstants.INOPERATION;
+        if(jumboJackpotPiecesFactory.isInOperation(jumboJackpotId)) {
+            return JumboJackpotConstants.RUNNING;
         }
 
         jumboJackpotServiceImpl.deleteJumboJack(jumboJackpotId);
@@ -201,8 +214,14 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "formDate", description = "jumbo jackpot start date", required = true, clazz = Date.class),
             @ApiQueryParam(name = "toDate", description = "jumbo jackpot end date",  required = true, clazz = Date.class)
     })
-    public @ApiResponseObject boolean update(@ApiBodyObject JumboJackpotBo jumboJackpotBo) throws Exception {
-        return jumboJackpotServiceImpl.updateJumboJackpot(jumboJackpotBo);
+    public @ApiResponseObject Integer update(@ApiBodyObject JumboJackpotBo jumboJackpotBo) throws Exception {
+        JumboJackpot jumboJackpot = jumboJackpotServiceImpl.getJumboJackpot(jumboJackpotBo.getJumboJackpotId());
+        if (jumboJackpot.getStatus() != JumboJackpotConstants.INIT) {
+            return JumboJackpotConstants.RUNNINGOREND;
+        }
+
+        jumboJackpotServiceImpl.updateJumboJackpot(jumboJackpotBo);
+        return JumboJackpotConstants.SUCCESS;
     }
 
 }

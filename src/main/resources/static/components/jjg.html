@@ -32,23 +32,23 @@
 
 <div class="box" id="table">
     <div class="box-header with-border">
-        <h3 class="box-title"></h3>
+        <h3 class="box-title">JJG List</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="text-align: center">
             <tr>
-                <th style="width: 10px">#</th>
-                <th>id</th>
-                <th>name</th>
-                <th>totalPieces</th>
-                <th>pieceType</th>
-                <th>racePieces</th>
-                <th>raceRatio</th>
-                <th>oddsOfWinning</th>
-                <th>formDate</th>
-                <th>toDate</th>
-                <th>status</th>
+                <th style="width: 10px;text-align: center">#</th>
+                <th style="text-align: center">id</th>
+                <th style="text-align: center">name</th>
+                <th style="text-align: center">totalPieces</th>
+                <th style="text-align: center">pieceType</th>
+                <th style="text-align: center">racePieces</th>
+                <th style="text-align: center">raceRatio</th>
+                <th style="text-align: center">oddsOfWinning</th>
+                <th style="text-align: center">formDate</th>
+                <th style="text-align: center">toDate</th>
+                <th style="text-align: center">status</th>
             </tr>
             <tbody id="jumboJackpotList">
 
@@ -129,10 +129,39 @@
             <!-- /.box-footer -->
         </form>
     </div>
-    <!-- /.box -->
+</div>
 
+<div class="col-md-6" style="width: 100%; display: none" id="viewJJG">
+    <!-- Horizontal Form -->
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">JJG Pieces<span id="jjgId" style="margin-left: 5px"></span></h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
 
-    <!-- ./wrapper -->
+        <div class="box-body">
+            <table class="table table-bordered" style="text-align: center">
+                <tr>
+                    <th style="width: 10px;text-align: center">#</th>
+                    <th style="text-align: center">id</th>
+                    <th style="text-align: center">name</th>
+                    <th style="text-align: center">number</th>
+                    <th style="text-align: center">createDate</th>
+                    <th style="text-align: center">updateDate</th>
+                </tr>
+                <tbody id="jumboJackpotPiecesList">
+
+                </tbody>
+            </table>
+            <div id="noData" style="width: 100%; text-align: center; height: 200px; display: none; background-color: #7777771f;line-height: 200px;"></div>
+            <a  class="btn btn-default" style="margin-top: 10px;width: 100px" onclick="cancelAddJJG()">Back</a>
+            <a id="goLiveBtn"  class="btn btn-info" style="margin-left: 25px; margin-top: 10px;width: 100px" onclick="cancelGoLive()">Go Live</a>
+            <input id="jjgIdForActive" style="display: none" value="">
+        </div>
+
+    </div>
+</div>
 
     <!-- jQuery 3 -->
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
@@ -186,14 +215,14 @@
                 content = content + '<td>' + data[index].racePieces + '</td>';
                 content = content + '<td>' + data[index].raceRatio + '</td>';
                 content = content + '<td>' + data[index].oddsOfWinning + '</td>';
-                content = content + '<td>' + data[index].formDate + '</td>';
-                content = content + '<td>' + data[index].toDate + '</td>';
+                content = content + '<td>' + getFormatDate(data[index].formDate, false) + '</td>';
+                content = content + '<td>' + getFormatDate(data[index].toDate, false) + '</td>';
                 content = content + '<td>' + data[index].status + '</td>';
                 content = content + '<td>' +
                     '<a onclick="deleteJJG('+ data[index].jumboJackpotId +')">' +
                     '<i class="fa fa-fw fa-trash"></i></a>' +
                     '<a onclick="editJJG('+ data[index].jumboJackpotId +')"><i class="fa fa-fw fa-pencil"></i></a>' +
-                    '<a onclick="viewJJGDetail('+ data[index].jumboJackpotId +')"><i class="fa fa-fw fa-eye"></i></a></td>';
+                    '<a onclick="viewJJGDetail('+ data[index].jumboJackpotId +')"><i class="fa fa-fw fa-eye"></i></a></td></tr>';
             }
 
             $('#jumboJackpotList').html(content);

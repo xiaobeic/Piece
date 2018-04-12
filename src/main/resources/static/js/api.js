@@ -4,24 +4,64 @@ function changeSidebarColor(sidebarName) {
     sidebarName == "sidebarGamePiece" ? $("#sidebarGamePiece").addClass("active") : $("#sidebarGamePiece").removeClass("active");
 }
 
-function editUser() {
-    $("#table").css("display", "none");
-    $("#modifyOrCreate").css("display", "block");
+function cancelGoLive() {
+    var jumboJackpotId = $("#jjgIdForActive").val();
+    $.ajax({
+        type: 'get',
+        url: 'http://localhost:8080/admin/jumboJackpot/create',
+        data: {'jumboJackpotId': jumboJackpotId },
+        success: function(result){
+            if (result == 0) {
+                alert('invalied paramter!');
+            } else if (result == 3) {
+                alert("Running or is finished cannot be activated.");
+            } else if (result == 4) {
+                alert("Generate pieces is fail.");
+            } else {
+                alert("Successfully activated");
+                window.location.href = "http://localhost:8080/components/jjg.html";
+            }
+        },
+        error: function(result) {
+            alert('Request exception!');
+        }
+    });
 }
 
-function addUser() {
-    $("#table").css("display", "none");
-    $("#modifyOrCreate").css("display", "block");
-}
 
-function cancelAddUser() {
-    $("#modifyOrCreate").css("display", "none");
-    $("#table").css("display", "block");
-}
-
-function submitAddUser() {
-    $("#modifyOrCreate").css("display", "none");
-    $("#table").css("display", "block");
+function viewJJGDetail(jumboJackpotId) {
+    $.ajax({
+        type: 'get',
+        url: 'http://localhost:8080/admin/jumboJackpot/getJumboJackpotPieces',
+        data: {'jumboJackpotId': jumboJackpotId },
+        success: function(result){
+            if (result.length == 0) {
+                $("#noData").css("display", "block");
+                $("#noData").html("No activation of JJG");
+                $("#jjgIdForActive").val(jumboJackpotId);
+            } else {
+                $("#jjgId").html(": " + result[0].jumboJackpotId);
+                var content = "";
+                for (var index = 0; index < result.length; index ++ ) {
+                    content = content + '<tr><td>' + (index + 1) + '</td>';
+                    content = content + '<td>' + result[index].pieceId + '</td>';
+                    content = content + '<td>' + result[index].pieceName + '</td>';
+                    content = content + '<td>' + result[index].pieceNumber + '</td>';
+                    content = content + '<td>' + getFormatDate(result[index].createdDate, true) + '</td>';
+                    content = content + '<td>' + getFormatDate(result[index].updatedDate, true) + '</td>';
+                }
+                $("#noData").css("display", "none");
+                $("#goLiveBtn").css("display", "none");
+                $("#jumboJackpotPiecesList").html(content);
+            }
+            $("#table").css("display", "none");
+            $("#modifyOrCreate").css("display", "none");
+            $("#viewJJG").css("display", "block");
+        },
+        error: function(result) {
+            alert('Request exception!');
+        }
+    });
 }
 
 function editJJG(jumboJackpotId) {
@@ -31,17 +71,17 @@ function editJJG(jumboJackpotId) {
         data: {'jumboJackpotId': jumboJackpotId },
         dataType: 'json',
         success: function(result){
-            console.log(result);
             $("#jumboJackpotId").val(result.jumboJackpotId);
             $("#jjgName").val(result.name);
             $("#totalPieces").val(result.totalPieces);
             $("#pieceType").val(result.pieceType);
             $("#racePieces").val(result.racePieces);
             $("#raceRatio").val(result.raceRatio);
-            $("#formDate").val(getFormatDate(result.formDate));
-            $("#toDate").val(getFormatDate(result.toDate));
+            $("#formDate").val(getFormatDate(result.formDate, false));
+            $("#toDate").val(getFormatDate(result.toDate, false));
 
             $("#table").css("display", "none");
+            $("#viewJJG").css("display", "none");
             $("#modifyOrCreate").css("display", "block");
 
             $("#jjgAdd").css("display", "none");
@@ -53,11 +93,20 @@ function editJJG(jumboJackpotId) {
     });
 }
 
-function getFormatDate(formatDate){
+function getFormatDate(formatDate, isFull){
+    if (null == formatDate || "" == formatDate) {
+        return "";
+    }
     var formatDate= new Date(formatDate);
     var year = formatDate.getFullYear();
     var month = formatDate.getMonth() + 1 < 10 ? "0" + (formatDate.getMonth() + 1) : formatDate.getMonth() + 1;
     var date = formatDate.getDate() < 10 ? "0" + formatDate.getDate() : formatDate.getDate();
+    if (isFull) {
+        var hours = formatDate.getHours() < 10 ? "0" + formatDate.getHours() : formatDate.getHours();
+        var minuts = formatDate.getMinutes() < 10 ? "0" + formatDate.getMinutes() : formatDate.getMinutes();
+        var seconds = formatDate.getSeconds() < 10 ? "0" + formatDate.getSeconds() : formatDate.getSeconds();
+        return year + "-" + month + "-" + date + " " + hours + ":" + minuts + ":" +seconds;
+    }
     return year + "-" + month + "-" + date;
 }
 
@@ -72,8 +121,9 @@ function deleteJJG(jumboJackpotId) {
             } else if (result == 1) {
                 alert('Jumbo jackpot in operation cannot be deleted.');
             } else {
-                alert('Delete success!');
+                alert('Successfully deleted!');
                 $("#table").css("display", "none");
+                $("#viewJJG").css("display", "none");
                 $("#modifyOrCreate").css("display", "block");
                 window.location.href = "http://localhost:8080/components/jjg.html";
             }
@@ -86,11 +136,13 @@ function deleteJJG(jumboJackpotId) {
 
 function addJJG() {
     $("#table").css("display", "none");
+    $("#viewJJG").css("display", "none");
     $("#modifyOrCreate").css("display", "block");
 }
 
 function cancelAddJJG() {
     $("#modifyOrCreate").css("display", "none");
+    $("#viewJJG").css("display", "none");
     $("#table").css("display", "block");
 }
 
@@ -100,7 +152,7 @@ function submitAddJJG() {
         url: 'http://localhost:8080/admin/jumboJackpot/save',
         data: $('#addJumboJackpot').serialize(),
         success: function(result){
-            alert('Save success!');
+            alert('Successfully saved!');
             window.location.href = "http://localhost:8080/components/jjg.html";
         },
         error: function(result) {
@@ -115,8 +167,12 @@ function submitUpdateJJG() {
         url: 'http://localhost:8080/admin/jumboJackpot/update',
         data: $('#addJumboJackpot').serialize(),
         success: function(result){
-            alert('Update success!');
-            window.location.href = "http://localhost:8080/components/jjg.html";
+            if (result == 3) {
+                alert('Running or is finished cannot be modified.');
+            } else {
+                alert('Successfully updated!');
+                window.location.href = "http://localhost:8080/components/jjg.html";
+            }
         },
         error: function(result) {
             alert('invalid parameter!');

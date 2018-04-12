@@ -75,6 +75,7 @@ public class JumboJackpotServiceImpl implements JumboJackpotService {
         DataObjectConvertUtils.copyProperties(jumboJackpot, jumboJackpotBo);
 
         jumboJackpot.setUpdatedDate(new Date());
+        jumboJackpot.setStatus(JumboJackpotConstants.INIT);
         //Data processing
 
         jumboJackpotDao.save(jumboJackpot);

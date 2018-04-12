@@ -2,10 +2,12 @@ package com.jjg.core;
 
 import com.jjg.constants.JumboJackpotConstants;
 import com.jjg.model.JumboJackpot;
+import com.jjg.model.JumboJackpotPieceState;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 import com.jjg.model.vo.JumboJackpotRestoreVo;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -70,8 +72,8 @@ public class JumboJackpotPiecesFactory {
      * Return a jumbo jackpot pool
      * @return jumboJackpotPool
      */
-    public JumboJackpotPiecesPool getJumboJackpot (Long jumboJackpotId) {
-        return jumboJackpotList.get(jumboJackpotId);
+    public HashMap<String, JumboJackpotPieceState> getJumboJackpot (Long jumboJackpotId) {
+        return jumboJackpotList.get(jumboJackpotId).getJumboJackpotPieces();
     }
 
     /**
@@ -88,11 +90,11 @@ public class JumboJackpotPiecesFactory {
      * @param jumboJackpotId
      * @return
      */
-    public boolean removeJumboJackpot (Long jumboJackpotId) {
+    public boolean isInOperation (Long jumboJackpotId) {
         if (jumboJackpotList.containsKey(jumboJackpotId)){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -110,7 +112,7 @@ public class JumboJackpotPiecesFactory {
         JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPiecesPool.getPiece(playerId);
 
         if (jumboJackpotPieceVo.isCollectAll() || jumboJackpotPieceVo.isGiveOutAll()) {
-            removeJumboJackpot(jumboJackpotId);
+            jumboJackpotList.remove(jumboJackpotId);
         }
 
         return jumboJackpotPieceVo;
