@@ -185,24 +185,24 @@
                 dataType: 'json',
                 success: function(data){
                     console.log(data);
-                    initUserPagination(pageSize, data);
+                    //initUserPagination(pageSize, data.length);
                     playData(data);
                 }
             });
         });
 
-        function initUserPagination (pageSize, totalPage) {
-            var previousButton = '<li id="previousPage"><a>&laquo;</a></li>';
-            var nextButton = '<li id="nextPage"><a >&raquo;</a></li>';
-            var middle = '';
-            var buttonNum = Math.ceil(totalPage / pageSize);
-
-            for (var index = 1; index <= buttonNum; index ++) {
-                middle = middle + '<li id="goPage' + index + '"><a>' + index + '</a></li>';
-            }
-
-            $('#paginationBar').html(previousButton + middle + nextButton);
-        }
+        // function initUserPagination (pageSize, totalPage) {
+        //     var previousButton = '<li id="previousPage"><a>&laquo;</a></li>';
+        //     var nextButton = '<li id="nextPage"><a >&raquo;</a></li>';
+        //     var middle = '';
+        //     var buttonNum = Math.ceil(totalPage / pageSize);
+        //
+        //     for (var index = 1; index <= buttonNum; index ++) {
+        //         middle = middle + '<li id="goPage' + index + '"><a>' + index + '</a></li>';
+        //     }
+        //
+        //     $('#paginationBar').html(previousButton + middle + nextButton);
+        // }
 
         function playData (data) {
             var content = '';

@@ -6,6 +6,7 @@ import com.jjg.model.bo.JumboJackpotBo;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 public interface JumboJackpotService {
 
@@ -28,4 +29,6 @@ public interface JumboJackpotService {
     JumboJackpot getJumboJackpot(long jumboJackpotId) throws Exception;
 
     boolean updateJumboJackpot(JumboJackpotBo jumboJackpotBo) throws Exception;
+
+    List<Long> getJumboJackpotsId() throws Exception;
 }

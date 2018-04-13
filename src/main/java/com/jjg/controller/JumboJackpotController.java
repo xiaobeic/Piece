@@ -5,14 +5,17 @@ import com.jjg.core.JumboJackpotPiecesFactory;
 import com.jjg.core.JumboJackpotPiecesPool;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.JumboJackpotPieceState;
+import com.jjg.model.PlayerPiece;
 import com.jjg.model.bo.JumboJackpotBo;
 import com.jjg.model.vo.JumboJackpotPieceVo;
 import com.jjg.model.vo.JumboJackpotRestoreVo;
+import com.jjg.model.vo.PageVo;
 import com.jjg.service.JumboJackpotPieceStateService;
 import com.jjg.service.JumboJackpotService;
 import com.jjg.service.PlayerPieceService;
 import org.jsondoc.core.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,7 +65,7 @@ public class JumboJackpotController{
             jumboJackpotRestoreVo.setRarePlayer(playerPieceServiceImpl.getRarePlayer(jumboJackpot));
 
             jumboJackpotRestoreVo.setPlayersPieces(
-                    playerPieceServiceImpl.getPlayerPieces(jumboJackpot.getJumboJackpotId()));
+                    playerPieceServiceImpl.getPlayerPiecesByGroup(jumboJackpot.getJumboJackpotId()));
 
 
             jumboJackpotRestoreVos.add(jumboJackpotRestoreVo);
@@ -94,6 +97,22 @@ public class JumboJackpotController{
         jumboJackpotPieceStateServiceImpl.saveJumboJackpotPieceState(jumboJackpotPiecesPool.getJumboJackpotPieces());
         jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.ACTIVE);
         return JumboJackpotConstants.SUCCESS;
+    }
+
+    @RequestMapping(value = "/getPlayerPieces", method = RequestMethod.POST)
+    @ApiMethod(description = "get player piece")
+    @ApiParams(queryparams = {
+            @ApiQueryParam(name = "page", description = "Option! Page you want to retrieve, 0 indexed and defaults to 0.", required = false),
+            @ApiQueryParam(name = "size", description = "Option! Size of the page you want to retrieve, defaults to 20.", required = false),
+            @ApiQueryParam(name = "sort", description = "Option! Properties that should be sorted by in the format property,property(,ASC|DESC)", required = false)
+    })
+    public @ApiResponseObject PageVo<List<PlayerPiece>> getPlayerPieces (
+            @ApiQueryParam(name = "jumboJackpotId",description = "jumbo jackpot id") long jumboJackpotId,
+            @ApiQueryParam(name = "playerId",description = "playerId id", required = false) String playerId, Pageable pageable) throws Exception {
+
+        PageVo<List<PlayerPiece>> playerPieces = playerPieceServiceImpl.getPlayerPieces(jumboJackpotId, playerId, pageable);
+
+        return playerPieces;
     }
 
     @RequestMapping(value = "/getJumboJackpotPieces", method = RequestMethod.GET)
@@ -128,10 +147,16 @@ public class JumboJackpotController{
         return jumboJackpotServiceImpl.getJumboJackpotAll();
     }
 
-    @RequestMapping(value = "/getJumboJackpotsId", method = RequestMethod.GET)
-    @ApiMethod(description = "Get Jumbo Jackpots id")
-    public @ApiResponseObject Set<Long> getJumboJackpotsId () {
+    @RequestMapping(value = "/getJumboJackpotsActiveId", method = RequestMethod.GET)
+    @ApiMethod(description = "Get activated Jumbo Jackpots ids")
+    public @ApiResponseObject Set<Long> getJumboJackpotsActiveId () {
         return jumboJackpotPiecesFactory.getJumboJackpotList().keySet();
+    }
+
+    @RequestMapping(value = "/getJumboJackpotsId", method = RequestMethod.GET)
+    @ApiMethod(description = "Get Jumbo Jackpots ids")
+    public @ApiResponseObject List<Long> getJumboJackpotsId () throws Exception{
+        return jumboJackpotServiceImpl.getJumboJackpotsId();
     }
 
     @RequestMapping(value = "/removeJumboJackpot", method = RequestMethod.GET)

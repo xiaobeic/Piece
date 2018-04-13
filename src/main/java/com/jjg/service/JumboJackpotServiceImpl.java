@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class JumboJackpotServiceImpl implements JumboJackpotService {
@@ -80,6 +81,11 @@ public class JumboJackpotServiceImpl implements JumboJackpotService {
 
         jumboJackpotDao.save(jumboJackpot);
         return true;
+    }
+
+    @Override
+    public List<Long> getJumboJackpotsId() throws Exception{
+        return jumboJackpotDao.getJumboJackpotsId();
     }
 
     @Override

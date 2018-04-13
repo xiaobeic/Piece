@@ -3,8 +3,11 @@ package com.jjg.service;
 import com.jjg.model.JumboJackpot;
 import com.jjg.model.JumboJackpotPieceState;
 import com.jjg.model.PlayerPiece;
+import com.jjg.model.vo.PageVo;
 import com.jjg.repository.PlayerPieceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,7 +46,7 @@ public class PlayerPieceServiceImpl implements PlayerPieceService {
     }
 
     @Override
-    public HashMap<Long, List<String>> getPlayerPieces(Long jumboJackpotId) throws Exception {
+    public HashMap<Long, List<String>> getPlayerPiecesByGroup(Long jumboJackpotId) throws Exception {
         HashMap<Long, List<String>> playersPieces = new HashMap<>();
         List<PlayerPiece> playerPieces = playerPieceRepository.findByjumboJackpotId(jumboJackpotId);
 
@@ -59,5 +62,30 @@ public class PlayerPieceServiceImpl implements PlayerPieceService {
         }
 
         return playersPieces;
+    }
+
+    @Override
+    public PageVo<List<PlayerPiece>> getPlayerPieces(Long jumboJackpotId, String playerId, Pageable pageable) throws Exception {
+        PageVo<List<PlayerPiece>> pageVo = new PageVo<>();
+        List<PlayerPiece> playerPiecesList = new ArrayList<>();
+
+        Page<PlayerPiece> playerPieces = null;
+        if (playerId == null || "".equals(playerId)) {
+            playerPieces = playerPieceRepository.findByjumboJackpotId(jumboJackpotId, pageable);
+        } else {
+            playerPieces = playerPieceRepository.findByjumboJackpotIdAndPlayerId(jumboJackpotId, Long.valueOf(playerId), pageable);
+        }
+
+        for (PlayerPiece playerPiece : playerPieces) {
+            playerPiecesList.add(playerPiece);
+        }
+
+        pageVo.setTotalAmount(playerPieces.getTotalElements());
+        pageVo.setTotalPages(playerPieces.getTotalPages());
+        pageVo.setContent(playerPiecesList);
+        pageVo.setCurrentPage(pageable.getPageNumber());
+        pageVo.setSize(pageable.getPageSize());
+
+        return pageVo;
     }
 }
