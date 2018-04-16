@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -46,27 +43,26 @@ public class JumboJackpotPieceStateController {
 
     @RequestMapping(value = "/getPiece", method = RequestMethod.GET)
     @ApiMethod(description = "Get a piece by jumbo jackpot id and player id")
-    public @ApiResponseObject
-    boolean getPiece(
+    public @ApiResponseObject JumboJackpotPieceVo getPiece(
             @ApiQueryParam(name = "jumboJackpotId", description = "jumbo jackpot id") long jumboJackpotId,
             @ApiQueryParam(name = "playerId", description = "player id") long playerId) throws Exception {
-        if (!jumboJackpotServiceImpl.isActive(jumboJackpotId)) {
-            return false;
-        }
+        long startTime = System.currentTimeMillis();
 
         JumboJackpotPieceVo jumboJackpotPieceVo = jumboJackpotPiecesFactory.requestPiece(jumboJackpotId, playerId);
-
-        if (!jumboJackpotPieceStateServiceImpl.updatePieceState(jumboJackpotPieceVo.getJumboJackpotPieceState())) {
-            return false;
+        if (jumboJackpotPieceVo == null) {
+            return null;
         }
+        jumboJackpotPieceVo.setPlayerId(playerId);
 
+        jumboJackpotPieceStateServiceImpl.updatePieceState(jumboJackpotPieceVo.getJumboJackpotPieceState());
         playerPieceServiceImpl.save(jumboJackpotPieceVo.getJumboJackpotPieceState(), playerId);
 
         if (jumboJackpotPieceVo.isCollectAll() || jumboJackpotPieceVo.isGiveOutAll()) {
             jumboJackpotServiceImpl.updateJumboJackpotState(jumboJackpotId, JumboJackpotConstants.INACTIVE);
         }
 
-        return true;
+        jumboJackpotPieceVo.setProcessTime(System.currentTimeMillis() - startTime);
+        return jumboJackpotPieceVo;
     }
 
     @RequestMapping(value = "/getJumboJackpotPieces", method = RequestMethod.GET)

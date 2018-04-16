@@ -206,6 +206,7 @@ function addNewRow() {
 }
 
 function requestGamePieces() {
+    $('#requestPiecesData').html("");
     var index = $("#gamePieceTable tr").length;
     var params = new Array();
     var passed = true;
@@ -241,6 +242,8 @@ function requestGamePieces() {
     //request
     var completeTimes = 0;
     var queryFailTimes = 0;
+    var totalTimes = 0;
+    var totalTime = Date.now();
 
     for (var i = 0; i < params.length; i++) {
         var param = params[i];
@@ -255,16 +258,34 @@ function requestGamePieces() {
                     data:{jumboJackpotId : JJGID, playerId : users[j]},
                     success: function(result){
                         completeTimes ++;
-                        console.log(result);
+                        totalTimes++;
+                        var totalConsuming = Date.now() - totalTime;
+                        playPieceData(result, totalTimes, totalConsuming, true);
                     },
                     error: function(result) {
-                        console.log(result);
                         queryFailTimes ++;
+                        totalTimes++;
+                        var totalConsuming = Date.now() - totalTime;
+                        playPieceData(result, totalTimes, totalConsuming, false);
                     }
                 });
             }
         }
     }
+}
+
+function playPieceData(result, totalTimes, totalConsuming, status) {
+    var content = '';
+    content = content + '<tr><td>' + totalTimes + '</td>';
+    content = content + '<td>' + result.jumboJackpotPieceState.jumboJackpotId + '</td>';
+    content = content + '<td>' + result.jumboJackpotPieceState.pieceName + '</td>';
+    content = content + '<td>' + result.playerId + '</td>';
+    content = content + '<td>' + getFormatDate(result.createDate, true) + '</td>';
+    content = content + '<td>' + result.processTime + 'ms</td>';
+    content = content + '<td>' + totalConsuming + 'ms</td>';
+    content = content + '<td>' + (status ? 'Success' : 'Fail') + '</td></tr>';
+
+    $('#requestPiecesData').prepend(content);
 }
 
 

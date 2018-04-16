@@ -29,7 +29,7 @@
         <!-- Google Font -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
-    <body class="hold-transition skin-blue sidebar-mini">
+    <body class="hold-transition skin-blue sidebar-mini" id="gamePieceBody">
 
 
 
@@ -76,6 +76,26 @@
             <div class="box-footer clearfix">
                 <button class="btn bg-olive" onclick="addNewRow()" id="anotherRow">Another Row</button>
                 <button class="btn bg-olive" onclick="requestGamePieces()">Submit</button>
+            </div>
+        </div>
+
+        <div class="box" id="contentTable">
+            <div class="box-body">
+                <table class="table table-bordered" style="text-align: center">
+                    <tr>
+                        <th style="width: 10px;text-align: center">#</th>
+                        <th style="text-align: center">JJGID</th>
+                        <th style="text-align: center">pieceName</th>
+                        <th style="text-align: center">playerID</th>
+                        <th style="text-align: center">requestDate</th>
+                        <th style="text-align: center" title="Only server processing time">serverTime</th>
+                        <th style="text-align: center" title="Request time and server processing time">totalTime</th>
+                        <th style="text-align: center">status</th>
+                    </tr>
+                    <tbody id="requestPiecesData">
+
+                    </tbody>
+                </table>
             </div>
         </div>
 

@@ -172,6 +172,7 @@ public class JumboJackpotPiecesPool {
 
         boolean result = jumboJackpotPiecesChecker.jumboJackpotHandler(jumboJackpotPieceState, playerId);
 
+        jumboJackpotPieceVo.setCreateDate(new Date());
         jumboJackpotPieceVo.setCollectAll(result);
         jumboJackpotPieceVo.setJumboJackpotPieceState(jumboJackpotPieceState);
 
