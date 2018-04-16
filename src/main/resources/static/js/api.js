@@ -32,7 +32,7 @@ function cancelGoLive() {
 function viewJJGDetail(jumboJackpotId) {
     $.ajax({
         type: 'get',
-        url: 'http://localhost:8080/admin/jumboJackpot/getJumboJackpotPieces',
+        url: 'http://localhost:8080/admin/jumboJackpotPieceState/getJumboJackpotPieces',
         data: {'jumboJackpotId': jumboJackpotId },
         success: function(result){
             if (result.length == 0) {
@@ -250,7 +250,7 @@ function requestGamePieces() {
             for (var j = 0; j < users.length; j++) {
                 $.ajax({
                     type: 'get',
-                    url: 'http://localhost:8080/admin/jumboJackpot/getPiece',
+                    url: 'http://localhost:8080/admin/jumboJackpotPieceState/getPiece',
                     dataType: 'json',
                     data:{jumboJackpotId : JJGID, playerId : users[j]},
                     success: function(result){
