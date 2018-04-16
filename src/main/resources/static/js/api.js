@@ -260,13 +260,13 @@ function requestGamePieces() {
                         completeTimes ++;
                         totalTimes++;
                         var totalConsuming = Date.now() - totalTime;
-                        playPieceData(result, totalTimes, totalConsuming, true);
+                        playPieceSuccessData(result, totalTimes, totalConsuming);
                     },
                     error: function(result) {
                         queryFailTimes ++;
                         totalTimes++;
                         var totalConsuming = Date.now() - totalTime;
-                        playPieceData(result, totalTimes, totalConsuming, false);
+                        playPieceFailData(result, totalTimes, totalConsuming);
                     }
                 });
             }
@@ -274,7 +274,7 @@ function requestGamePieces() {
     }
 }
 
-function playPieceData(result, totalTimes, totalConsuming, status) {
+function playPieceSuccessData(result, totalTimes, totalConsuming) {
     var content = '';
     content = content + '<tr><td>' + totalTimes + '</td>';
     content = content + '<td>' + result.jumboJackpotPieceState.jumboJackpotId + '</td>';
@@ -283,7 +283,21 @@ function playPieceData(result, totalTimes, totalConsuming, status) {
     content = content + '<td>' + getFormatDate(result.createDate, true) + '</td>';
     content = content + '<td>' + result.processTime + 'ms</td>';
     content = content + '<td>' + totalConsuming + 'ms</td>';
-    content = content + '<td>' + (status ? 'Success' : 'Fail') + '</td></tr>';
+    content = content + '<td>Success</td></tr>';
+
+    $('#requestPiecesData').prepend(content);
+}
+
+function playPieceFailData(result, totalTimes, totalConsuming) {
+    var content = '';
+    content = content + '<tr><td>' + totalTimes + '</td>';
+    content = content + '<td>-</td>';
+    content = content + '<td>-</td>';
+    content = content + '<td>-</td>';
+    content = content + '<td>-</td>';
+    content = content + '<td>-</td>';
+    content = content + '<td>' + totalConsuming + 'ms</td>';
+    content = content + '<td style="color: red;">Fail</td></tr>';
 
     $('#requestPiecesData').prepend(content);
 }
