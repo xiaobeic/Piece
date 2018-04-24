@@ -52,31 +52,36 @@ public class JumboJackpotPiecesPool {
      * Randomly generate JJG fragments.
      */
     private void generateJumboJackpotPieces(){
-        int pieceType = jumboJackpot.getPieceType();
-        int raceRatio = jumboJackpot.getRaceRatio();
-        int totalPieces = jumboJackpot.getTotalPieces();
+        //int raceRatio = jumboJackpot.getRaceRatio();
         List<String> racePieces = Arrays.asList(jumboJackpot.getRacePieces().split(","));
+        int pieceType = jumboJackpot.getPieceType();
+        int totalPieces = jumboJackpot.getTotalPieces();
+        int totalRacePieces = racePieces.size();
+        int preciousPiecesSize = Math.round((totalPieces - totalRacePieces) * 0.25f);
+        int ordinariesPiecesSize = pieceType - totalRacePieces - preciousPiecesSize;
 
-        int totalRacePieces = totalPieces * raceRatio / 1000;
-        int perRacePiecesNum = totalRacePieces / racePieces.size();
-        //Ensure each race piece at least one
-        if (perRacePiecesNum == 0) {
-            perRacePiecesNum = 1;
-        }
+        List<String> preciousPieces = getPreciousPieces(preciousPiecesSize, pieceType, racePieces);
 
-        int perOrdinariesPiecesNum = (totalPieces - totalRacePieces) / (pieceType - racePieces.size());
+        int perPreciousPiecesNum = Math.round(totalPieces * 0.05f) / preciousPiecesSize;
+        int totalPreciousPieces = perPreciousPiecesNum * preciousPiecesSize;
+        int perOrdinariesPiecesNum = (totalPieces - totalRacePieces - totalPreciousPieces) / ordinariesPiecesSize;
+        int totalOrdinariesPieces = perOrdinariesPiecesNum * ordinariesPiecesSize;
 
-        int deviationPiece = totalPieces - (perRacePiecesNum * racePieces.size())
-                - (perOrdinariesPiecesNum * (pieceType - racePieces.size()));
-        int deviationRatio = deviationPiece > (pieceType - racePieces.size()) ? 2 : 1;
+        int deviationPiece = totalPieces - totalRacePieces - totalPreciousPieces - totalOrdinariesPieces;
+        int deviationRatio = deviationPiece > ordinariesPiecesSize ? 2 : 1;
 
         for (int i = 1; i <= pieceType; i++) {
             if (racePieces.contains(String.valueOf(i))) {
-                createJumboJackpotPiece(String.valueOf(i), perRacePiecesNum);
+                createJumboJackpotPiece(String.valueOf(i), 1);
+            } else if (preciousPieces.contains(String.valueOf(i))) {
+                createJumboJackpotPiece(String.valueOf(i), perPreciousPiecesNum);
             } else {
                 if (deviationPiece > 0) {
-                    createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum + deviationRatio);
                     deviationPiece -= deviationRatio;
+                    if (deviationPiece < 0) {
+                        deviationRatio = 1;
+                    }
+                    createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum + deviationRatio);
                 } else {
                     createJumboJackpotPiece(String.valueOf(i), perOrdinariesPiecesNum);
                 }
@@ -84,6 +89,18 @@ public class JumboJackpotPiecesPool {
         }
 
         generateIntervalMark();
+    }
+
+    private List<String> getPreciousPieces(int totalPreciousPieces, int pieceType, List<String> racePiece) {
+        List<String> preciousPieces = new ArrayList<>();
+        do {
+            String pieceNumber = String.valueOf(1 + (int)(Math.random() * pieceType));
+            if (!preciousPieces.contains(pieceNumber) && !racePiece.contains(pieceNumber)) {
+                preciousPieces.add(pieceNumber);
+            }
+        } while (preciousPieces.size() == totalPreciousPieces);
+
+        return  preciousPieces;
     }
 
     private void createJumboJackpotPiece (String piecesName, int pieceNumber) {
