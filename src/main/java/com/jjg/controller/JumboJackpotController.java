@@ -105,7 +105,6 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "totalPieces", description = "total pieces", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "racePieces", description = "race pieces", required = true, clazz = String.class),
             @ApiQueryParam(name = "pieceType", description = "pieces type", required = true, clazz = Integer.class),
-            @ApiQueryParam(name = "raceRatio", description = "race piece ratio", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "formDate", description = "jumbo jackpot start date", required = true, clazz = Date.class),
             @ApiQueryParam(name = "toDate", description = "jumbo jackpot end date",  required = true, clazz = Date.class)
 
@@ -134,7 +133,6 @@ public class JumboJackpotController{
             @ApiQueryParam(name = "totalPieces", description = "total pieces", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "racePieces", description = "race pieces", required = true, clazz = String.class),
             @ApiQueryParam(name = "pieceType", description = "pieces type", required = true, clazz = Integer.class),
-            @ApiQueryParam(name = "raceRatio", description = "race piece ratio", required = true, clazz = Integer.class),
             @ApiQueryParam(name = "formDate", description = "jumbo jackpot start date", required = true, clazz = Date.class),
             @ApiQueryParam(name = "toDate", description = "jumbo jackpot end date",  required = true, clazz = Date.class)
     })

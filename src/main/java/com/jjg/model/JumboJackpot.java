@@ -21,13 +21,10 @@ public class JumboJackpot {
     private String gameThumbnail;
     private String gameIcon;
     private String distributions;
-    private String mobileLocation;
-    private String kioskLocation;
     private Integer totalPieces;
     private String racePieces;
     private String oddsOfWinning;
     private Integer pieceType;
-    private Integer raceRatio;
     private Integer value;
     private String attractVideos;
     private Boolean isDefault;
@@ -84,14 +81,6 @@ public class JumboJackpot {
 
     public void setDistributions(String distributions) { this.distributions = distributions; }
 
-    public String getMobileLocation() { return mobileLocation; }
-
-    public void setMobileLocation(String mobileLocation) { this.mobileLocation = mobileLocation; }
-
-    public String getKioskLocation() { return kioskLocation; }
-
-    public void setKioskLocation(String kioskLocation) { this.kioskLocation = kioskLocation; }
-
     public Integer getTotalPieces() { return totalPieces; }
 
     public void setTotalPieces(Integer totalPieces) { this.totalPieces = totalPieces; }
@@ -107,10 +96,6 @@ public class JumboJackpot {
     public Integer getPieceType() { return pieceType; }
 
     public void setPieceType(Integer pieceType) { this.pieceType = pieceType; }
-
-    public Integer getRaceRatio() { return raceRatio; }
-
-    public void setRaceRatio(Integer raceRatio) { this.raceRatio = raceRatio; }
 
     public Integer getValue() { return value; }
 

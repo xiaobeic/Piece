@@ -57,7 +57,7 @@ public class JumboJackpotPiecesPool {
         int pieceType = jumboJackpot.getPieceType();
         int totalPieces = jumboJackpot.getTotalPieces();
         int totalRacePieces = racePieces.size();
-        int preciousPiecesSize = Math.round((totalPieces - totalRacePieces) * 0.25f);
+        int preciousPiecesSize = Math.round((pieceType - totalRacePieces) * 0.25f);
         int ordinariesPiecesSize = pieceType - totalRacePieces - preciousPiecesSize;
 
         List<String> preciousPieces = getPreciousPieces(preciousPiecesSize, pieceType, racePieces);
@@ -98,7 +98,7 @@ public class JumboJackpotPiecesPool {
             if (!preciousPieces.contains(pieceNumber) && !racePiece.contains(pieceNumber)) {
                 preciousPieces.add(pieceNumber);
             }
-        } while (preciousPieces.size() == totalPreciousPieces);
+        } while (preciousPieces.size() != totalPreciousPieces);
 
         return  preciousPieces;
     }

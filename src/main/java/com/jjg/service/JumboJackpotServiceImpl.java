@@ -113,8 +113,6 @@ public class JumboJackpotServiceImpl implements JumboJackpotService {
             throw new Exception(ErrorConstants.RACEPIECES);
         if (jumboJackpotBo.getPieceType() == null)
             throw new Exception(ErrorConstants.PIECETYPE);
-        if (jumboJackpotBo.getRaceRatio() == null)
-            throw new Exception(ErrorConstants.RACERATIO);
 
         if (jumboJackpotBo.getFormDate().getTime() > jumboJackpotBo.getToDate().getTime())
             throw new Exception(ErrorConstants.DATEERROR);

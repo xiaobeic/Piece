@@ -44,7 +44,6 @@
                 <th style="text-align: center">totalPieces</th>
                 <th style="text-align: center">pieceType</th>
                 <th style="text-align: center">racePieces</th>
-                <th style="text-align: center">raceRatio</th>
                 <th style="text-align: center">oddsOfWinning</th>
                 <th style="text-align: center">formDate</th>
                 <th style="text-align: center">toDate</th>
@@ -85,25 +84,23 @@
                 <div class="form-group">
                     <label for="totalPieces" class="col-sm-2 control-label">totalPieces</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="totalPieces" id="totalPieces" placeholder="totalPieces">
+                        <input type="number" class="form-control" name="totalPieces" id="totalPieces" placeholder="totalPieces" onchange="totalChecker()">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="pieceType" class="col-sm-2 control-label">pieceType</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="pieceType" id="pieceType" placeholder="pieceType">
+                        <select class="form-control" name="pieceType" id="pieceType" placeholder="pieceType">
+                            <option value="12">12</option>
+                            <option value="24" selected>24</option>
+                            <option value="36">36</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="racePieces" class="col-sm-2 control-label">racePieces</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="racePieces" id="racePieces" placeholder="racePieces">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="raceRatio" class="col-sm-2 control-label">raceRatio</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="raceRatio" id="raceRatio" placeholder="raceRatio">
                     </div>
                 </div>
                 <div class="form-group">
@@ -191,6 +188,12 @@
             });
         });
 
+        function totalChecker() {
+            if ($("#totalPieces").val() < 1000) {
+                $("#totalPieces").val(1000);
+            }
+        }
+
         // function initUserPagination (pageSize, totalPage) {
         //     var previousButton = '<li id="previousPage"><a>&laquo;</a></li>';
         //     var nextButton = '<li id="nextPage"><a >&raquo;</a></li>';
@@ -213,7 +216,6 @@
                 content = content + '<td>' + data[index].totalPieces + '</td>';
                 content = content + '<td>' + data[index].pieceType + '</td>';
                 content = content + '<td>' + data[index].racePieces + '</td>';
-                content = content + '<td>' + data[index].raceRatio + '</td>';
                 content = content + '<td>' + data[index].oddsOfWinning + '</td>';
                 content = content + '<td>' + getFormatDate(data[index].formDate, false) + '</td>';
                 content = content + '<td>' + getFormatDate(data[index].toDate, false) + '</td>';
